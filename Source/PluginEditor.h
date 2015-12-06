@@ -12,15 +12,9 @@
 #define PLUGINEDITOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "JenKnob.h"
 #include "BackgroundImage.h"
 #include "PluginProcessor.h"
-#include "CustomLookAndFeel.h"
-#include "OscComponent.h"
-#include "LFOComponent.h"
-#include "FilterComponent.h"
-#include "NoiseComponent.h"
-#include "AmpComponent.h"
-
 
 //==============================================================================
 /**
@@ -46,14 +40,17 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     JenSx1000AudioProcessor& processor;
-    ScopedPointer<LookAndFeel> LF = new CustomLookAndFeel;
     
     BackgroundImage backgroundImage;
-    OscComponent oscComponent;
-    LFOComponent lfoComponent;
-    FilterComponent filterComponent;
-    NoiseComponent noiseComponent;
-    AmpComponent ampComponent;
+    
+    JenSlider vcoVibrato, vcoPWM, vcoLevel, vcoGlide, lfoSpeed, vcfFrequency, vcfResonance, vcfLFO, vcfEnvLevel, vcfAttack, vcfDecay, vcfSustain, vcfRelease, noiseLevel, vcaOutputVolume, vcaAttack, vcaDecay, vcaSustain, vcaRelease;
+    
+    JenKnobTune vcoTune;
+    JenKnobOctave vcoOctave;
+    JenKnobNoise noiseNoise;
+    JenKnobWaveform vcoWaveform;
+    JenKnobPulseWidth vcoPulseWidth;
+
     
     JenSx1000AudioProcessor& getProcessor() const
     {

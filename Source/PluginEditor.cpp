@@ -10,100 +10,120 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "JenColours.h"
 
 
 //==============================================================================
 JenSx1000AudioProcessorEditor::JenSx1000AudioProcessorEditor (JenSx1000AudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+: AudioProcessorEditor (&p), processor (p), vcoTune(JenColours::red), vcoOctave(JenColours::red), vcoVibrato(JenColours::yellow), vcoWaveform(JenColours::red), vcoPulseWidth(JenColours::red), vcoPWM(JenColours::red), vcoLevel(JenColours::red), vcoGlide(JenColours::red), lfoSpeed(JenColours::yellow), vcfFrequency(JenColours::white), vcfResonance(JenColours::white), vcfLFO(JenColours::yellow), vcfEnvLevel(JenColours::blue), vcfAttack(JenColours::blue), vcfDecay(JenColours::blue), vcfSustain(JenColours::blue), vcfRelease(JenColours::blue), noiseNoise(JenColours::green), noiseLevel(JenColours::green), vcaOutputVolume(JenColours::white), vcaAttack(JenColours::blue), vcaDecay(JenColours::blue), vcaSustain(JenColours::blue), vcaRelease(JenColours::blue)
 {
     DBG("\n-- JenSx1000AudioProcessorEditor contructor called\n");
     
-    setLookAndFeel(LF);
-    
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (900, 450);
-
+    setSize (backgroundImage.getWidth(), backgroundImage.getHeight());
+    
     addAndMakeVisible(backgroundImage);
-    addAndMakeVisible(oscComponent);
-    addAndMakeVisible(lfoComponent);
-    addAndMakeVisible(filterComponent);
-    addAndMakeVisible(noiseComponent);
-    addAndMakeVisible(ampComponent);
+    
+    addAndMakeVisible(vcoTune);
+    addAndMakeVisible(vcoOctave);
+    addAndMakeVisible(vcoVibrato);
+    addAndMakeVisible(vcoWaveform);
+    addAndMakeVisible(vcoPulseWidth);
+    addAndMakeVisible(vcoPWM);
+    addAndMakeVisible(vcoLevel);
+    addAndMakeVisible(vcoGlide);
+    addAndMakeVisible(lfoSpeed);
+    addAndMakeVisible(vcfFrequency);
+    addAndMakeVisible(vcfResonance);
+    addAndMakeVisible(vcfLFO);
+    addAndMakeVisible(vcfEnvLevel);
+    addAndMakeVisible(vcfAttack);
+    addAndMakeVisible(vcfDecay);
+    addAndMakeVisible(vcfSustain);
+    addAndMakeVisible(vcfRelease);
+    addAndMakeVisible(noiseNoise);
+    addAndMakeVisible(noiseLevel);
+    addAndMakeVisible(vcaOutputVolume);
+    addAndMakeVisible(vcaAttack);
+    addAndMakeVisible(vcaDecay);
+    addAndMakeVisible(vcaSustain);
+    addAndMakeVisible(vcaRelease);
     
     // ------- VCO Listeners --------------------------------------------------
     
-    oscComponent.tune.slider.addListener(this);
-    oscComponent.vibrato.slider.addListener(this);
-    oscComponent.octave.slider.addListener(this);
-    oscComponent.waveform.slider.addListener(this);
-    oscComponent.pulsewidth.slider.addListener(this);
-    oscComponent.pwm.slider.addListener(this);
-    oscComponent.glide.slider.addListener(this);
-    oscComponent.level.slider.addListener(this);
-    
+    vcoTune.addListener(this);
+    vcoOctave.addListener(this);
+    vcoVibrato.addListener(this);
+    vcoWaveform.addListener(this);
+    vcoPulseWidth.addListener(this);
+    vcoPWM.addListener(this);
+    vcoLevel.addListener(this);
+    vcoGlide.addListener(this);
     
     // ------- VCF Listeners --------------------------------------------------
-    filterComponent.frequency.slider.addListener(this);
-    filterComponent.resonance.slider.addListener(this);
-    filterComponent.lfo.slider.addListener(this);
-    filterComponent.envLevel.slider.addListener(this);
-    filterComponent.envelope.attack.slider.addListener(this);
-    filterComponent.envelope.decay.slider.addListener(this);
-    filterComponent.envelope.sustain.slider.addListener(this);
-    filterComponent.envelope.release.slider.addListener(this);
+    vcfFrequency.addListener(this);
+    vcfResonance.addListener(this);
+    vcfLFO.addListener(this);
+    vcfEnvLevel.addListener(this);
+    vcfAttack.addListener(this);
+    vcfDecay.addListener(this);
+    vcfSustain.addListener(this);
+    vcfRelease.addListener(this);
     
     // ------- VCA Listeners --------------------------------------------------
-    ampComponent.envelope.attack.slider.addListener(this);
-    ampComponent.envelope.decay.slider.addListener(this);
-    ampComponent.envelope.sustain.slider.addListener(this);
-    ampComponent.envelope.release.slider.addListener(this);
-    ampComponent.outputVolume.slider.addListener(this);
+    vcaOutputVolume.addListener(this);
+    vcaAttack.addListener(this);
+    vcaDecay.addListener(this);
+    vcaSustain.addListener(this);
+    vcaRelease.addListener(this);
     
     // ------- LFO Listeners --------------------------------------------------
-    lfoComponent.speed.slider.addListener(this);
+    lfoSpeed.addListener(this);
     
     // ------- Noise Listeners ------------------------------------------------
-    noiseComponent.noise.slider.addListener(this);
-    noiseComponent.level.slider.addListener(this);
+    noiseNoise.addListener(this);
+    noiseLevel.addListener(this);
     
     startTimer(50); //start calling timerCallback function
 }
 
 JenSx1000AudioProcessorEditor::~JenSx1000AudioProcessorEditor()
 {
-    // ------- ampComponent -------
-    ampComponent.envelope.attack.slider.removeListener(this);
-    ampComponent.envelope.decay.slider.removeListener(this);
-    ampComponent.envelope.sustain.slider.removeListener(this);
-    ampComponent.envelope.release.slider.removeListener(this);
+    // ------- VCO Listeners --------------------------------------------------
     
-    // ------- oscComponent -------
-    oscComponent.tune.slider.removeListener(this);
-    oscComponent.vibrato.slider.removeListener(this);
-    oscComponent.octave.slider.removeListener(this);
-    oscComponent.waveform.slider.removeListener(this);
-    oscComponent.pulsewidth.slider.removeListener(this);
-    oscComponent.pwm.slider.removeListener(this);
-    oscComponent.glide.slider.removeListener(this);
-    oscComponent.level.slider.removeListener(this);
+    vcoTune.removeListener(this);
+    vcoOctave.removeListener(this);
+    vcoVibrato.removeListener(this);
+    vcoWaveform.removeListener(this);
+    vcoPulseWidth.removeListener(this);
+    vcoPWM.removeListener(this);
+    vcoLevel.removeListener(this);
+    vcoGlide.removeListener(this);
     
-    // ------- LFOComponent -------
-    lfoComponent.speed.slider.removeListener(this);
+    // ------- VCF Listeners --------------------------------------------------
+    vcfFrequency.removeListener(this);
+    vcfResonance.removeListener(this);
+    vcfLFO.removeListener(this);
+    vcfEnvLevel.removeListener(this);
+    vcfAttack.removeListener(this);
+    vcfDecay.removeListener(this);
+    vcfSustain.removeListener(this);
+    vcfRelease.removeListener(this);
     
-    // ------- filterComponent -------
-    filterComponent.frequency.slider.removeListener(this);
-    filterComponent.resonance.slider.removeListener(this);
-    filterComponent.lfo.slider.removeListener(this);
-    filterComponent.envLevel.slider.removeListener(this);
-    filterComponent.envelope.attack.slider.removeListener(this);
-    filterComponent.envelope.decay.slider.removeListener(this);
-    filterComponent.envelope.sustain.slider.removeListener(this);
-    filterComponent.envelope.release.slider.removeListener(this);
+    // ------- VCA Listeners --------------------------------------------------
+    vcaOutputVolume.removeListener(this);
+    vcaAttack.removeListener(this);
+    vcaDecay.removeListener(this);
+    vcaSustain.removeListener(this);
+    vcaRelease.removeListener(this);
     
-    // ------- noiseComponent -------
-    noiseComponent.noise.slider.removeListener(this);
-    noiseComponent.level.slider.removeListener(this);
+    // ------- LFO Listeners --------------------------------------------------
+    lfoSpeed.removeListener(this);
+    
+    // ------- Noise Listeners ------------------------------------------------
+    noiseNoise.removeListener(this);
+    noiseLevel.removeListener(this);
     
     stopTimer();
 }
@@ -119,11 +139,38 @@ void JenSx1000AudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
-    oscComponent.setTopLeftPosition(0, 0);
-    lfoComponent.setTopLeftPosition(318, 0);
-    filterComponent.setTopLeftPosition(400, 0);
-    noiseComponent.setTopLeftPosition(100, 200);
-    ampComponent.setTopLeftPosition(300, 200);
+    backgroundImage.setTopLeftPosition(0, 0);
+    
+    const int spacingX = 106;
+    const int spacingY = 120;
+    
+    vcoTune.setTopLeftPosition(0,0);
+    vcoOctave.setTopLeftPosition(vcoTune.getPosition().getX() + spacingX, 0);
+    vcoVibrato.setTopLeftPosition(vcoOctave.getPosition().getX() + spacingX, 0);
+    lfoSpeed.setTopLeftPosition(vcoVibrato.getPosition().getX() + spacingX, 0);
+    vcfFrequency.setTopLeftPosition(lfoSpeed.getPosition().getX() + spacingX, 0);
+    vcfResonance.setTopLeftPosition(vcfFrequency.getPosition().getX() + spacingX, 0);
+    vcfLFO.setTopLeftPosition(vcfResonance.getPosition().getX() + spacingX, 0);
+    vcfEnvLevel.setTopLeftPosition(vcfLFO.getPosition().getX() + spacingX, 0);
+    
+    
+    vcoWaveform.setTopLeftPosition(vcoTune.getPosition().getX(), spacingY);
+    vcoPulseWidth.setTopLeftPosition(vcoOctave.getPosition().getX(), spacingY);
+    vcoPWM.setTopLeftPosition(vcoVibrato.getPosition().getX(), spacingY);
+    vcoLevel.setTopLeftPosition(lfoSpeed.getPosition().getX(), spacingY);
+    vcfAttack.setTopLeftPosition(vcfFrequency.getPosition().getX(), spacingY);
+    vcfDecay.setTopLeftPosition(vcfResonance.getPosition().getX(), spacingY);
+    vcfSustain.setTopLeftPosition(vcfLFO.getPosition().getX(), spacingY);
+    vcfRelease.setTopLeftPosition(vcfEnvLevel.getPosition().getX(), spacingY);
+    
+    vcoGlide.setTopLeftPosition(vcoTune.getPosition().getX(), spacingY * 2);
+    noiseNoise.setTopLeftPosition(vcoOctave.getPosition().getX(), spacingY * 2);
+    noiseLevel.setTopLeftPosition(vcoVibrato.getPosition().getX(), spacingY * 2);
+    vcaOutputVolume.setTopLeftPosition(lfoSpeed.getPosition().getX(), spacingY * 2);
+    vcaAttack.setTopLeftPosition(vcfFrequency.getPosition().getX(), spacingY * 2);
+    vcaDecay.setTopLeftPosition(vcfResonance.getPosition().getX(), spacingY * 2);
+    vcaSustain.setTopLeftPosition(vcfLFO.getPosition().getX(), spacingY * 2);
+    vcaRelease.setTopLeftPosition(vcfEnvLevel.getPosition().getX(), spacingY * 2);
     
 }
 
@@ -134,38 +181,46 @@ void JenSx1000AudioProcessorEditor::timerCallback()
     JenSx1000AudioProcessor& ourProcessor = getProcessor();
     
     //------- VCO --------------------------------------------------------------
-    oscComponent.tune.slider.setValue(ourProcessor.vcoTuneParam->getValue(), dontSendNotification);
-    oscComponent.octave.slider.setValue(ourProcessor.vcoOctaveParam->getValue(), dontSendNotification);
-    oscComponent.vibrato.slider.setValue(ourProcessor.vcoVibratoParam->getValue(), dontSendNotification);
-    oscComponent.waveform.slider.setValue(ourProcessor.vcoWaveformParam->getValue(), dontSendNotification);
-    oscComponent.pulsewidth.slider.setValue(ourProcessor.vcoPulseWidthParam->getValue(), dontSendNotification);
-    oscComponent.pwm.slider.setValue(ourProcessor.vcoPWMParam->getValue(), dontSendNotification);
-    oscComponent.level.slider.setValue(ourProcessor.vcoLevelParam->getValue(), dontSendNotification);
-    oscComponent.glide.slider.setValue(ourProcessor.vcoGlideParam->getValue(), dontSendNotification);
+    vcoTune.setValue(ourProcessor.vcoTuneParam->getValue(), dontSendNotification);
+    //vcoTune.repaint();
+    vcoOctave.setValue(ourProcessor.vcoOctaveParam->getValue(), dontSendNotification);
+    //vcoOctave.repaint();
+    vcoVibrato.setValue(ourProcessor.vcoVibratoParam->getValue(), dontSendNotification);
+    //vcoVibrato.repaint();
+    vcoWaveform.setValue(ourProcessor.vcoWaveformParam->getValue(), dontSendNotification);
+    //vcoWaveform.repaint();
+    vcoPulseWidth.setValue(ourProcessor.vcoPulseWidthParam->getValue(), dontSendNotification);
+    //vcoPulseWidth.repaint();
+    vcoPWM.setValue(ourProcessor.vcoPWMParam->getValue(), dontSendNotification);
+    //vcoPWM.repaint();
+    vcoLevel.setValue(ourProcessor.vcoLevelParam->getValue(), dontSendNotification);
+    //vcoLevel.slider.repaint();
+    vcoGlide.setValue(ourProcessor.vcoGlideParam->getValue(), dontSendNotification);
+    //vcoGlide.repaint();
     
     //------- LFO --------------------------------------------------------------
-    lfoComponent.speed.slider.setValue(ourProcessor.lfoSpeedParam->getValue(), dontSendNotification);
+    lfoSpeed.setValue(ourProcessor.lfoSpeedParam->getValue(), dontSendNotification);
     
     //------- VCF --------------------------------------------------------------
-    filterComponent.frequency.slider.setValue(ourProcessor.vcfFrequencyParam->getValue(), dontSendNotification);
-    filterComponent.resonance.slider.setValue(ourProcessor.vcfResonanceParam->getValue(), dontSendNotification);
-    filterComponent.lfo.slider.setValue(ourProcessor.vcfLFOParam->getValue(), dontSendNotification);
-    filterComponent.envLevel.slider.setValue(ourProcessor.vcfEnvLevelParam->getValue(), dontSendNotification);
-    filterComponent.envelope.attack.slider.setValue(ourProcessor.vcfAttackParam->getValue(), dontSendNotification);
-    filterComponent.envelope.decay.slider.setValue(ourProcessor.vcfDecayParam->getValue(), dontSendNotification);
-    filterComponent.envelope.sustain.slider.setValue(ourProcessor.vcfSustainParam->getValue(), dontSendNotification);
-    filterComponent.envelope.release.slider.setValue(ourProcessor.vcfReleaseParam->getValue(), dontSendNotification);
+    vcfFrequency.setValue(ourProcessor.vcfFrequencyParam->getValue(), dontSendNotification);
+    vcfResonance.setValue(ourProcessor.vcfResonanceParam->getValue(), dontSendNotification);
+    vcfLFO.setValue(ourProcessor.vcfLFOParam->getValue(), dontSendNotification);
+    vcfEnvLevel.setValue(ourProcessor.vcfEnvLevelParam->getValue(), dontSendNotification);
+    vcfAttack.setValue(ourProcessor.vcfAttackParam->getValue(), dontSendNotification);
+    vcfDecay.setValue(ourProcessor.vcfDecayParam->getValue(), dontSendNotification);
+    vcfSustain.setValue(ourProcessor.vcfSustainParam->getValue(), dontSendNotification);
+    vcfRelease.setValue(ourProcessor.vcfReleaseParam->getValue(), dontSendNotification);
     
     //------- Noise ------------------------------------------------------------
-    noiseComponent.noise.slider.setValue(ourProcessor.noiseNoiseParam->getValue(), dontSendNotification);
-    noiseComponent.level.slider.setValue(ourProcessor.noiseLevelParam->getValue(), dontSendNotification);
+    noiseNoise.setValue(ourProcessor.noiseNoiseParam->getValue(), dontSendNotification);
+    noiseLevel.setValue(ourProcessor.noiseLevelParam->getValue(), dontSendNotification);
     
     //------- VCA --------------------------------------------------------------
-    ampComponent.outputVolume.slider.setValue(ourProcessor.vcaOutputVolumeParam->getValue(), dontSendNotification);
-    ampComponent.envelope.attack.slider.setValue(ourProcessor.vcaAttackParam->getValue(), dontSendNotification);
-    ampComponent.envelope.decay.slider.setValue(ourProcessor.vcaDecayParam->getValue(), dontSendNotification);
-    ampComponent.envelope.sustain.slider.setValue(ourProcessor.vcaSustainParam->getValue(), dontSendNotification);
-    ampComponent.envelope.release.slider.setValue(ourProcessor.vcaReleaseParam->getValue(), dontSendNotification);
+    vcaOutputVolume.setValue(ourProcessor.vcaOutputVolumeParam->getValue(), dontSendNotification);
+    vcaAttack.setValue(ourProcessor.vcaAttackParam->getValue(), dontSendNotification);
+    vcaDecay.setValue(ourProcessor.vcaDecayParam->getValue(), dontSendNotification);
+    vcaSustain.setValue(ourProcessor.vcaSustainParam->getValue(), dontSendNotification);
+    vcaRelease.setValue(ourProcessor.vcaReleaseParam->getValue(), dontSendNotification);
     
 }
 
@@ -194,38 +249,38 @@ AudioProcessorParameter* JenSx1000AudioProcessorEditor::getParameterFromSlider (
 {
     
     //------- VCO Sliders -------------------------------------------------------
-    if (slider == &oscComponent.tune.slider){return getProcessor().vcoTuneParam;}
-    else if (slider == &oscComponent.octave.slider){return getProcessor().vcoOctaveParam;}
-    else if (slider == &oscComponent.vibrato.slider){return getProcessor().vcoVibratoParam;}
-    else if (slider == &oscComponent.waveform.slider){return getProcessor().vcoWaveformParam;}
-    else if (slider == &oscComponent.pulsewidth.slider){return getProcessor().vcoPulseWidthParam;}
-    else if (slider == &oscComponent.pwm.slider){return getProcessor().vcoPWMParam;}
-    else if (slider == &oscComponent.level.slider){return getProcessor().vcoLevelParam;}
-    else if (slider == &oscComponent.glide.slider){return getProcessor().vcoGlideParam;}
+    if (slider == &vcoTune){return getProcessor().vcoTuneParam;}
+    else if (slider == &vcoOctave){return getProcessor().vcoOctaveParam;}
+    else if (slider == &vcoVibrato){return getProcessor().vcoVibratoParam;}
+    else if (slider == &vcoWaveform){return getProcessor().vcoWaveformParam;}
+    else if (slider == &vcoPulseWidth){return getProcessor().vcoPulseWidthParam;}
+    else if (slider == &vcoPWM){return getProcessor().vcoPWMParam;}
+    else if (slider == &vcoLevel){return getProcessor().vcoLevelParam;}
+    else if (slider == &vcoGlide){return getProcessor().vcoGlideParam;}
     
     //------- LFO Sliders --------------------------------------------------------
-    else if (slider == &lfoComponent.speed.slider){return getProcessor().lfoSpeedParam;}
+    else if (slider == &lfoSpeed){return getProcessor().lfoSpeedParam;}
     
     //------- VCF Sliders --------------------------------------------------------
-    else if (slider == &filterComponent.frequency.slider){return getProcessor().vcfFrequencyParam;}
-    else if (slider == &filterComponent.resonance.slider){return getProcessor().vcfResonanceParam;}
-    else if (slider == &filterComponent.lfo.slider){return getProcessor().vcfLFOParam;}
-    else if (slider == &filterComponent.envLevel.slider){return getProcessor().vcfEnvLevelParam;}
-    else if (slider == &filterComponent.envelope.attack.slider){return getProcessor().vcfAttackParam;}
-    else if (slider == &filterComponent.envelope.decay.slider){return getProcessor().vcfDecayParam;}
-    else if (slider == &filterComponent.envelope.sustain.slider){return getProcessor().vcfSustainParam;}
-    else if (slider == &filterComponent.envelope.release.slider){return getProcessor().vcfReleaseParam;}
+    else if (slider == &vcfFrequency){return getProcessor().vcfFrequencyParam;}
+    else if (slider == &vcfResonance){return getProcessor().vcfResonanceParam;}
+    else if (slider == &vcfLFO){return getProcessor().vcfLFOParam;}
+    else if (slider == &vcfEnvLevel){return getProcessor().vcfEnvLevelParam;}
+    else if (slider == &vcfAttack){return getProcessor().vcfAttackParam;}
+    else if (slider == &vcfDecay){return getProcessor().vcfDecayParam;}
+    else if (slider == &vcfSustain){return getProcessor().vcfSustainParam;}
+    else if (slider == &vcfRelease){return getProcessor().vcfReleaseParam;}
     
     //------- Noise Sliders -------------------------------------------------------
-    else if (slider == &noiseComponent.noise.slider){return getProcessor().noiseNoiseParam;}
-    else if (slider == &noiseComponent.level.slider){return getProcessor().noiseLevelParam;}
+    else if (slider == &noiseNoise){return getProcessor().noiseNoiseParam;}
+    else if (slider == &noiseLevel){return getProcessor().noiseLevelParam;}
     
     //------- VCA Sliders ---------------------------------------------------------
-    else if (slider == &ampComponent.outputVolume.slider){return getProcessor().vcaOutputVolumeParam;}
-    else if (slider == &ampComponent.envelope.attack.slider){return getProcessor().vcaAttackParam;}
-    else if (slider == &ampComponent.envelope.decay.slider){return getProcessor().vcaDecayParam;}
-    else if (slider == &ampComponent.envelope.sustain.slider){return getProcessor().vcaSustainParam;}
-    else if (slider == &ampComponent.envelope.release.slider){return getProcessor().vcaReleaseParam;}
+    else if (slider == &vcaOutputVolume){return getProcessor().vcaOutputVolumeParam;}
+    else if (slider == &vcaAttack){return getProcessor().vcaAttackParam;}
+    else if (slider == &vcaDecay){return getProcessor().vcaDecayParam;}
+    else if (slider == &vcaSustain){return getProcessor().vcaSustainParam;}
+    else if (slider == &vcaRelease){return getProcessor().vcaReleaseParam;}
     
     return nullptr;
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>AFF15B38-90BB-4CFC-A947-55B197EBE5AB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JenSX1000</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CB707C278D6F4DDD1D85B27E5B21CB275883D0DA</key>
+		<string>https://github.com/dimitrisudell/JenSX1000.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Builds/MacOSX/JenSX1000.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CB707C278D6F4DDD1D85B27E5B21CB275883D0DA</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/dimitrisudell/JenSX1000.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CB707C278D6F4DDD1D85B27E5B21CB275883D0DA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CB707C278D6F4DDD1D85B27E5B21CB275883D0DA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JenSX1000</string>
+		</dict>
+	</array>
+</dict>
+</plist>

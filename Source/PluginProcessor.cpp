@@ -313,14 +313,7 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         oscillator.setNextPWMSample(nextLFOSample);
         
         oscillator.updateFrequency(freqControl.getNextFrequency());
-        //float ampLevel_temp = ampLevel;
-        //float ampEnvelope_nextSample_temp = ampEnvelope.getNextSample();
-        //float noiseLevel_temp = noiseLevel;
-        //float noise_nextSample_temp = noise.getNextSample();
-        //float vcoLevel_temp = vcoLevel;
-        //float oscillator_nextSample_temp = oscillator.getNextSample();
-        //float filter_procesedSample_temp = vcf.processNextSample(oscillator_nextSample_temp * vcoLevel_temp);
-        //float nextSample = filter_procesedSample_temp + (noise_nextSample_temp * noiseLevel_temp) * ampEnvelope_nextSample_temp * ampLevel_temp;
+        
         float nextSample = (vcf.processNextSample((oscillator.getNextSample() * vcoLevel) + (noise.getNextSample() * noiseLevel)) * ampEnvelope.getNextSample()) * ampLevel;
         jassert(nextSample <= 1);
         jassert(nextSample >= -1);

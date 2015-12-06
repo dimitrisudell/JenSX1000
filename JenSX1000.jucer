@@ -12,10 +12,6 @@
               companyName="whatever">
   <MAINGROUP id="UY44e4" name="JenSX1000">
     <GROUP id="{723F6252-F6C6-D731-16CE-67EBF008B70B}" name="Source">
-      <FILE id="z81LzL" name="BackgroundImage.cpp" compile="1" resource="0"
-            file="Source/BackgroundImage.cpp"/>
-      <FILE id="K978Z2" name="BackgroundImage.h" compile="0" resource="0"
-            file="Source/BackgroundImage.h"/>
       <FILE id="zvB0Xr" name="FactoryPrograms.h" compile="0" resource="0"
             file="Source/FactoryPrograms.h"/>
       <GROUP id="{69062EDC-FD71-5F9F-096F-9E33FDD23FDB}" name="Logic">
@@ -34,17 +30,11 @@
         <FILE id="s7OlGx" name="JenOscillator.h" compile="0" resource="0" file="Source/JenOscillator.h"/>
       </GROUP>
       <GROUP id="{172E8F0E-5E94-6365-0F33-AFF4AA48C40B}" name="UI">
-        <FILE id="gAP52u" name="CustomLookAndFeel.h" compile="0" resource="0"
-              file="Source/CustomLookAndFeel.h"/>
-        <FILE id="J0JNXi" name="FilterComponent.h" compile="0" resource="0"
-              file="Source/FilterComponent.h"/>
-        <FILE id="e0ECJQ" name="NoiseComponent.h" compile="0" resource="0"
-              file="Source/NoiseComponent.h"/>
-        <FILE id="LTcrkY" name="LFOComponent.h" compile="0" resource="0" file="Source/LFOComponent.h"/>
-        <FILE id="YJwLc5" name="AmpComponent.h" compile="0" resource="0" file="Source/AmpComponent.h"/>
-        <FILE id="VFwuu7" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
-        <FILE id="S27JYw" name="EnvelopeComponent.h" compile="0" resource="0"
-              file="Source/EnvelopeComponent.h"/>
+        <FILE id="Rettp1" name="JenColours.h" compile="0" resource="0" file="Source/JenColours.h"/>
+        <FILE id="z81LzL" name="BackgroundImage.cpp" compile="1" resource="0"
+              file="Source/BackgroundImage.cpp"/>
+        <FILE id="K978Z2" name="BackgroundImage.h" compile="0" resource="0"
+              file="Source/BackgroundImage.h"/>
         <FILE id="GNdEEu" name="JenKnob.h" compile="0" resource="0" file="Source/JenKnob.h"/>
       </GROUP>
       <FILE id="STou9K" name="PluginProcessor.cpp" compile="1" resource="0"
