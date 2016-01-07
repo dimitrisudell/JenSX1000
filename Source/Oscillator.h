@@ -11,7 +11,7 @@
 #ifndef OSCILLATOR_H_INCLUDED
 #define OSCILLATOR_H_INCLUDED
 
-
+#include <math.h>
 
 class Oscillator{
 public:

@@ -8,7 +8,6 @@
   ==============================================================================
 */
 
-#include <math.h>
 #include "Oscillator.h"
 #include "JuceHeader.h"
 
