@@ -9,6 +9,7 @@
 */
 
 #include "Filter.h"
+#include "JuceHeader.h"
 
 Filter::Filter() : cutoff(0.2), resonance(0.0), mode(FILTER_MODE_LOWPASS), buf0(0.0), buf1(0.0), buf2(0.0), buf3(0.0) {
     calculateFeedbackAmount();

@@ -11,8 +11,6 @@
 #ifndef FILTER_H_INCLUDED
 #define FILTER_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
-
 class Filter {
     
 public:
