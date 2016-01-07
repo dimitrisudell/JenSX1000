@@ -8,9 +8,17 @@
   ==============================================================================
 */
 
+#include <math.h>
 #include "Oscillator.h"
-#include <iostream>
 #include "JuceHeader.h"
+
+Oscillator::Oscillator(): currentPhase(0), currentWave(SINE) {
+    updatePhaseIncrement();
+};
+
+void Oscillator::updateWave(Wave w) {
+    currentWave = w;
+}
 
 void Oscillator::updateFrequency(double freq){
     currentFrequency = freq;
@@ -66,6 +74,25 @@ float Oscillator::naiveWaveformForMode(Wave wave) {
 void Oscillator::updateSampleRate(double sampleRate){
     currentSampleRate = sampleRate;
     updatePhaseIncrement();
+}
+
+void Oscillator::setPulseWidth(float percent){
+    masterPulseWidthPercent = percent;
+    calculteCurrentPulseWidth();
+}
+
+void Oscillator::calculteCurrentPulseWidth(){
+    pulseWidthFaction = (masterPulseWidthPercent/100) + (PWMLFOSample * PWMamount);
+    if (pulseWidthFaction < 0) { pulseWidthFaction = 0;}
+    pulseWidth = twoPI * pulseWidthFaction;
+}
+
+void Oscillator::setNextPWMSample(double sample){
+    PWMLFOSample = sample/4;
+}
+
+void Oscillator::setPWMamount(float amount){
+    PWMamount = amount;
 }
 
 void Oscillator::updatePhaseIncrement(){

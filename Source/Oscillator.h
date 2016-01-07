@@ -11,8 +11,7 @@
 #ifndef OSCILLATOR_H_INCLUDED
 #define OSCILLATOR_H_INCLUDED
 
-#include <math.h>
-#include <iostream>
+
 
 class Oscillator{
 public:
@@ -20,10 +19,11 @@ public:
         SAW, SQUARE, PULSE, SINE, TRIANGLE
     };
     
-    Oscillator(): currentPhase(0), currentWave(SINE) { updatePhaseIncrement();};
+    Oscillator();
+    
     virtual ~Oscillator() {};
     
-    void updateWave(Wave w) { currentWave = w; };
+    void updateWave(Wave);
     
     void updateFrequency(double freq);
     
@@ -31,32 +31,20 @@ public:
     
     void updateSampleRate(double sampleRate);
     
-    void setPulseWidth(float percent){
-        masterPulseWidthPercent = percent;
-        calculteCurrentPulseWidth();
-    }
+    void setPulseWidth(float);
     
-    void calculteCurrentPulseWidth(){
-        pulseWidthFaction = (masterPulseWidthPercent/100) + (PWMLFOSample * PWMamount);
-        if (pulseWidthFaction < 0) { pulseWidthFaction = 0;}
-        pulseWidth = twoPI * pulseWidthFaction;
-    }
+    void calculteCurrentPulseWidth();
     
-    void setNextPWMSample(double sample){
-        PWMLFOSample = sample/4;
-    }
+    void setNextPWMSample(double);
     
-    void setPWMamount(float amount){
-        PWMamount = amount;
-    }
-    
+    void setPWMamount(float);
     
 protected:
-    virtual float naiveWaveformForMode(Wave wave);
     
-    double currentSampleRate, currentPhase, phaseIncrement;
+    virtual float naiveWaveformForMode(Wave);
+    
+    double currentFrequency, currentSampleRate, currentPhase, phaseIncrement;
     Wave currentWave;
-    double currentFrequency;
     
     virtual void updatePhaseIncrement();
     
