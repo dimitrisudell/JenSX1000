@@ -153,7 +153,6 @@ void JenSx1000AudioProcessorEditor::resized()
     vcfLFO.setTopLeftPosition(vcfResonance.getPosition().getX() + spacingX, 0);
     vcfEnvLevel.setTopLeftPosition(vcfLFO.getPosition().getX() + spacingX, 0);
     
-    
     vcoWaveform.setTopLeftPosition(vcoTune.getPosition().getX(), spacingY);
     vcoPulseWidth.setTopLeftPosition(vcoOctave.getPosition().getX(), spacingY);
     vcoPWM.setTopLeftPosition(vcoVibrato.getPosition().getX(), spacingY);

@@ -21,6 +21,8 @@
 #include "EqControl.h"
 #include "FactoryPrograms.h"
 
+#include "TestsHeader.h"
+
 
 //==============================================================================
 /**

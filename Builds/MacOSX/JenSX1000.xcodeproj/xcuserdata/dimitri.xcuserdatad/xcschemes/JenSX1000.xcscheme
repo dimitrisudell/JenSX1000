@@ -40,7 +40,7 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
-         FilePath = "/Users/dimitri/Desktop/Plugin Host.app">
+         FilePath = "/Applications/Plugin Host.app">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference

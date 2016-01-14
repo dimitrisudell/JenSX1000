@@ -11,23 +11,34 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.2.0"
               companyName="whatever">
   <MAINGROUP id="UY44e4" name="JenSX1000">
+    <GROUP id="{90A78808-EF32-F50A-18A5-0C80CA23094F}" name="UnitTests">
+      <FILE id="FwxOli" name="TestsHeader.h" compile="0" resource="0" file="Source/TestsHeader.h"/>
+      <FILE id="O8h3Sa" name="EnvelopeTests.h" compile="0" resource="0" file="Source/EnvelopeTests.h"/>
+    </GROUP>
     <GROUP id="{723F6252-F6C6-D731-16CE-67EBF008B70B}" name="Source">
       <FILE id="zvB0Xr" name="FactoryPrograms.h" compile="0" resource="0"
             file="Source/FactoryPrograms.h"/>
       <GROUP id="{69062EDC-FD71-5F9F-096F-9E33FDD23FDB}" name="Logic">
-        <FILE id="BZJFa7" name="VCF.h" compile="0" resource="0" file="Source/VCF.h"/>
+        <FILE id="ymWiDY" name="EqControl.cpp" compile="1" resource="0" file="Source/EqControl.cpp"/>
+        <FILE id="BZJFa7" name="EqControl.h" compile="0" resource="0" file="Source/EqControl.h"/>
         <FILE id="qvaTgK" name="JenParameter.h" compile="0" resource="0" file="Source/JenParameter.h"/>
-        <FILE id="kJDO1Q" name="FilterControl.h" compile="0" resource="0" file="Source/FilterControl.h"/>
-        <FILE id="givUUV" name="polyBLEPOscillator.h" compile="0" resource="0"
-              file="Source/polyBLEPOscillator.h"/>
         <FILE id="GbUxwD" name="NoiseGen.h" compile="0" resource="0" file="Source/NoiseGen.h"/>
-        <FILE id="yGT1ck" name="FreqControl.cpp" compile="1" resource="0" file="Source/FreqControl.cpp"/>
         <FILE id="tRUYAa" name="FreqControl.h" compile="0" resource="0" file="Source/FreqControl.h"/>
+        <FILE id="yGT1ck" name="FreqControl.cpp" compile="1" resource="0" file="Source/FreqControl.cpp"/>
+        <FILE id="ipMZ8Y" name="Glide.h" compile="0" resource="0" file="Source/Glide.h"/>
+        <FILE id="MJujyT" name="Glide.cpp" compile="1" resource="0" file="Source/Glide.cpp"/>
+        <FILE id="cpFkry" name="Vibrato.h" compile="0" resource="0" file="Source/Vibrato.h"/>
+        <FILE id="mnvn5y" name="Vibrato.cpp" compile="1" resource="0" file="Source/Vibrato.cpp"/>
         <FILE id="DIfMcl" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+        <FILE id="vzmrgS" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
         <FILE id="bcCtn5" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
+        <FILE id="eb5ZzL" name="Envelope.cpp" compile="1" resource="0" file="Source/Envelope.cpp"/>
         <FILE id="tTdRM3" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
         <FILE id="hdnjZc" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
-        <FILE id="s7OlGx" name="JenOscillator.h" compile="0" resource="0" file="Source/JenOscillator.h"/>
+        <FILE id="givUUV" name="PolyBlepOscillator.h" compile="0" resource="0"
+              file="Source/PolyBlepOscillator.h"/>
+        <FILE id="GOXuod" name="PolyBlepOscillator.cpp" compile="1" resource="0"
+              file="Source/PolyBlepOscillator.cpp"/>
       </GROUP>
       <GROUP id="{172E8F0E-5E94-6365-0F33-AFF4AA48C40B}" name="UI">
         <FILE id="Rettp1" name="JenColours.h" compile="0" resource="0" file="Source/JenColours.h"/>

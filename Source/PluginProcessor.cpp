@@ -17,6 +17,13 @@
 //==============================================================================
 JenSx1000AudioProcessor::JenSx1000AudioProcessor()
 {
+    //Run Unit tests
+    if (true){
+        std::cout << "processor created";
+        UnitTestRunner runner;
+        runner.runAllTests();
+    }
+    
     //------- VCO Params -------------------------------------------------------
     
     addParameter(vcoTuneParam = new JenParameter(*this, "VCO tune", 0.5));
@@ -273,6 +280,7 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     // I've added this to avoid people getting screaming feedback
     // when they first compile the plugin, but obviously you don't need to
     // this code if your algorithm already fills all the output channels.
+    
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
@@ -284,8 +292,7 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         if (m.isNoteOn())
         {
             lastMidiNote = m.getNoteNumber();
-            DBG("midi note on : " << lastMidiNote << "\n");
-            DBG("i am printing");
+            DBG("MIDI note triggered : " << lastMidiNote << "\n");
             freqControl.setNote(lastMidiNote);
             ampEnvelope.begin();
             vcf.begin();
@@ -315,8 +322,10 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         oscillator.updateFrequency(freqControl.getNextFrequency());
         
         float nextSample = (vcf.processNextSample((oscillator.getNextSample() * vcoLevel) + (noise.getNextSample() * noiseLevel)) * ampEnvelope.getNextSample()) * ampLevel;
+        
         jassert(nextSample <= 1);
         jassert(nextSample >= -1);
+        
         firstChannelData[sample] = nextSample;
     }
     
