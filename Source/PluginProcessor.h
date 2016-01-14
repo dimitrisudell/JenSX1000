@@ -12,13 +12,13 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "polyBLEPOscillator.h"
+#include "PolyBlepOscillator.h"
 #include "Oscillator.h"
 #include "Envelope.h"
 #include "Filter.h"
 #include "FreqControl.h"
 #include "NoiseGen.h"
-#include "VCF.h"
+#include "EqControl.h"
 #include "FactoryPrograms.h"
 
 
@@ -69,12 +69,12 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    PolyBLEPOscillator oscillator;
+    PolyBlepOscillator oscillator;
     Oscillator lfo;
     FreqControl freqControl;
     Envelope ampEnvelope;
     NoiseGen noise;
-    VCF vcf;
+    EqControl vcf;
     Envelope filterEnvelope;
     
     double currentSampleRate;
