@@ -43,6 +43,7 @@ private:
     
     float tuning;
     Octave currentOctave;
+    double getMidiNoteInHertz (float, const double frequencyOfA = 440);
 
 };
 

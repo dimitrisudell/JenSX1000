@@ -9,7 +9,6 @@
 */
 
 #include "FreqControl.h"
-#include "juce_MidiMessage.h"
 
 
     FreqControl::FreqControl(): tuning(0), currentOctave(EIGHT){};
@@ -23,9 +22,15 @@
     
     double FreqControl::getNextFrequency() {
         currentNote = targetNote + tuning + getNextVibratoIncrement() + currentOctave - getNextGlideIncrement();
-        return MidiMessage::getMidiNoteInHertz(currentNote);
+        return FreqControl::getMidiNoteInHertz(currentNote);
     };
     
     void FreqControl::setOctave(Octave oct){
         currentOctave = oct;
     }
+
+double FreqControl::getMidiNoteInHertz (float noteNumber, const double frequencyOfA)
+{
+    return frequencyOfA * pow (2.0, (noteNumber - 69) / 12.0);
+}
+
