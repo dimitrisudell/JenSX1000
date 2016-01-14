@@ -30,13 +30,15 @@ public:
     
     void setEnvLevel(float);
     
-    void setAttackTime(double);
+    void setAttackValue(double);
     
-    void setDecayTime(double);
+    void setDecayValue(double);
     
     void setSustainAmplitude(float);
     
-    void setReleaseTime(double);
+    void setReleaseValue(double);
+    
+    void setSampleRate(double);
     
     double processNextSample(double);
     

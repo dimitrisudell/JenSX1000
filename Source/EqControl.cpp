@@ -9,8 +9,9 @@
 */
 
 #include "EqControl.h"
+#include "JenConstants.h"
 
-EqControl::EqControl() {
+EqControl::EqControl(): envelope(JenConstants::FilterEnvMaxAttackTime, JenConstants::FilterEnvMaxDecayTime, JenConstants::FilterEnvMaxReleaseTime) {
     filter.setFilterMode(Filter::FILTER_MODE_LOWPASS);
 }
 
@@ -35,20 +36,24 @@ void EqControl::setEnvLevel(float level){
     envLevel = level;
 }
 
-void EqControl::setAttackTime(double level){
-    envelope.setAttackTime(level);
+void EqControl::setAttackValue(double level){
+    envelope.setAttackValue(level);
 }
 
-void EqControl::setDecayTime(double level){
-    envelope.setDecayTime(level);
+void EqControl::setDecayValue(double level){
+    envelope.setDecayValue(level);
 }
 
 void EqControl::setSustainAmplitude(float level){
     envelope.setSustainAmplitude(level);
 }
 
-void EqControl::setReleaseTime(double level){
-    envelope.setReleaseTime(level);
+void EqControl::setReleaseValue(double level){
+    envelope.setReleaseValue(level);
+}
+
+void EqControl::setSampleRate(double sampleRate){
+    envelope.setSampleRate(sampleRate);
 }
 
 double EqControl::processNextSample(double sample){

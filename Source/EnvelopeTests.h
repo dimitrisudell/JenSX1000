@@ -16,7 +16,7 @@
 class EnvelopeTests  : public UnitTest, public Envelope {
     
 public:
-    EnvelopeTests()  : UnitTest ("Envelope Tests") {}
+    EnvelopeTests()  : UnitTest ("Envelope Tests"), Envelope(2, 2, 2) {}
     
     void runTest() override {
 

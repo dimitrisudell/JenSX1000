@@ -19,19 +19,28 @@ public:
         ATTACK, DECAY, SUSTAIN, RELEASE, OFF
     };
     
-    Envelope();
+    //Set Envelope times in seconds
+    //sampleRate - number samples per second
+    Envelope(double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate = 44000.00);
     
     void begin();
     
     void release();
     
-    void setAttackTime(double);
+    //Double between 0 and 1
+    void setAttackValue(double);
     
-    void setReleaseTime(double);
+    //Double between 0 and 1
+    void setReleaseValue(double);
     
-    void setDecayTime(double);
+    //Double between 0 and 1
+    void setDecayValue(double);
     
+    //Double between 0 and 1
     void setSustainAmplitude(double);
+    
+    //Sample rate must be over 0
+    void setSampleRate(double);
     
     float getNextSample();
     
@@ -42,18 +51,23 @@ private:
     
     const float maxAmplitude = 1;
     const float minAmplitude = 0;
-    float currentAmplitude;
     
-    double attackTime;
-    float attackIncrement;
+    double mSampleRate;
     
-    double decayTime;
-    float decayIncrement;
+    float mCurrentAmplitude;
+    float mSustainAmplitude;
     
-    float sustainAmplitude;
+    double mMaxAttackTime;
+    double mCurrentAttackValue;
+    float mAttackIncrement;
     
-    double releaseTime;
-    float releaseIncrement;
+    double mMaxDecayTime;
+    double mCurrentDecayValue;
+    float mDecayIncrement;
+    
+    double mMaxReleaseTime;
+    double mCurrentReleaseValue;
+    float mReleaseIncrement;
     
 };
 

@@ -77,7 +77,6 @@ public:
     Envelope ampEnvelope;
     NoiseGen noise;
     EqControl vcf;
-    Envelope filterEnvelope;
     
     double currentSampleRate;
     float ampLevel;

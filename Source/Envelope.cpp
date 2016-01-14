@@ -11,62 +11,111 @@
 #include "Envelope.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
-Envelope::Envelope(): currentAmplitude(minAmplitude), sustainAmplitude(minAmplitude) { updateState(OFF);};
+Envelope::Envelope(double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate):
+mSampleRate(sampleRate),
+mCurrentAmplitude(minAmplitude),
+mMaxAttackTime(maxAttackTime),
+mCurrentAttackValue(0.5),
+mMaxDecayTime(maxDecayTime),
+mCurrentDecayValue(0.5),
+mMaxReleaseTime(maxReleaseTime),
+mCurrentReleaseValue(0.5)
+{
+    jassert(maxAttackTime > 0);
+    jassert(maxDecayTime > 0);
+    jassert(maxReleaseTime > 0);
+    jassert(sampleRate > 0);
+    
+    updateState(OFF);
+    setSustainAmplitude(minAmplitude);
+    setSampleRate(sampleRate);
+}
 
 void Envelope::begin() {
     updateState(ATTACK);
-    currentAmplitude = minAmplitude;
+    mCurrentAmplitude = minAmplitude;
 }
 
 void Envelope::release() {
-    setReleaseTime(releaseTime);
+    setReleaseValue(mCurrentReleaseValue);
     updateState(RELEASE);
 }
 
-void Envelope::setAttackTime(double aTime){
-    attackTime = aTime + 1;
-    attackIncrement = maxAmplitude/(attackTime); //returns nan if divide by 0
+void Envelope::setAttackValue(double aValue){
+    jassert(aValue >= 0);
+    jassert(aValue <= 1);
+    //will cause errors if it is 0
+    if (aValue <= 0){
+        mCurrentAttackValue = 0.001;
+    } else {
+        mCurrentAttackValue = aValue;
+    }
+    mAttackIncrement = maxAmplitude/(mCurrentAttackValue * mMaxAttackTime * mSampleRate); //returns nan if divide by 0
 }
 
-void Envelope::setReleaseTime(double rTime) {
-    jassert(sustainAmplitude >= minAmplitude);
-    releaseTime = rTime + 1;
-    releaseIncrement = currentAmplitude/(releaseTime); //returns nan if divide by 0
+void Envelope::setReleaseValue(double rValue) {
+    jassert(rValue >= 0);
+    jassert(rValue <= 1);
+    jassert(mSustainAmplitude >= minAmplitude);
+    //will cause errors if it is 0
+    if (rValue <= 0){
+        mCurrentReleaseValue = 0.001;
+    } else {
+        mCurrentReleaseValue = rValue;
+    }
+    mReleaseIncrement = mCurrentAmplitude/(mCurrentReleaseValue * mMaxReleaseTime * mSampleRate); //returns nan if divide by 0
 }
 
-void Envelope::setDecayTime(double dTime) {
-    jassert(sustainAmplitude >= minAmplitude);
-    decayTime = dTime + 1;
-    decayIncrement = (maxAmplitude - sustainAmplitude) / (decayTime); //returns nan if divide by 0
+void Envelope::setDecayValue(double dValue) {
+    jassert(dValue >= 0);
+    jassert(dValue <= 1);
+    jassert(mSustainAmplitude >= minAmplitude);
+    //will cause errors if it is 0
+    if (dValue <= 0){
+        mCurrentDecayValue = 0.001;
+    } else {
+        mCurrentDecayValue = dValue;
+    }
+    mDecayIncrement = (maxAmplitude - mSustainAmplitude) / (mCurrentDecayValue * mMaxDecayTime * mSampleRate); //returns nan if divide by 0
 }
 
 void Envelope::setSustainAmplitude(double sAmplitude){
-    jassert((sAmplitude >= minAmplitude) && (sAmplitude <= maxAmplitude));
-    sustainAmplitude = sAmplitude;
-    setReleaseTime(releaseTime);
-    setDecayTime(decayTime);
+    jassert(sAmplitude >= minAmplitude);
+    jassert(sAmplitude <= maxAmplitude);
+    mSustainAmplitude = sAmplitude;
+    setReleaseValue(mCurrentReleaseValue);
+    setDecayValue(mCurrentDecayValue);
+}
+
+void Envelope::setSampleRate(double sampleRate){
+    jassert(sampleRate > 0);
+    mSampleRate = sampleRate;
+    setAttackValue(mCurrentAttackValue);
+    setDecayValue(mCurrentDecayValue);
+    setReleaseValue(mCurrentReleaseValue);
 }
 
 float Envelope::getNextSample(){
     switch (state){
         case ATTACK:
-            currentAmplitude += attackIncrement;
-            if (currentAmplitude >= maxAmplitude) {currentAmplitude = maxAmplitude; updateState(DECAY);}
+            mCurrentAmplitude += mAttackIncrement;
+            if (mCurrentAmplitude >= maxAmplitude) {mCurrentAmplitude = maxAmplitude; updateState(DECAY);}
             break;
         case DECAY:
-            currentAmplitude -= decayIncrement;
-            if (currentAmplitude <= sustainAmplitude) {currentAmplitude = sustainAmplitude; updateState(SUSTAIN);}
+            mCurrentAmplitude -= mDecayIncrement;
+            if (mCurrentAmplitude <= mSustainAmplitude) {mCurrentAmplitude = mSustainAmplitude; updateState(SUSTAIN);}
             break;
         case SUSTAIN:
             break;
         case RELEASE:
-            currentAmplitude -= releaseIncrement;
-            if (currentAmplitude <= minAmplitude) {currentAmplitude = minAmplitude; updateState(OFF);}
+            mCurrentAmplitude -= mReleaseIncrement;
+            if (mCurrentAmplitude <= minAmplitude) {mCurrentAmplitude = minAmplitude; updateState(OFF);}
         case OFF:
             break;
     }
-    jassert((currentAmplitude >= minAmplitude) && (currentAmplitude <= maxAmplitude));
-    return currentAmplitude;
+    jassert(mCurrentAmplitude >= minAmplitude);
+    jassert(mCurrentAmplitude <= maxAmplitude);
+    return mCurrentAmplitude;
     
 };
 

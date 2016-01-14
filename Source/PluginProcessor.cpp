@@ -10,15 +10,18 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "JenConstants.h"
 
 #include "JenParameter.h"
 
 
 //==============================================================================
-JenSx1000AudioProcessor::JenSx1000AudioProcessor()
+JenSx1000AudioProcessor::JenSx1000AudioProcessor() :
+ampEnvelope(JenConstants::AmpEnvMaxAttackTime, JenConstants::AmpEnvMaxDecayTime, JenConstants::AmpEnvMaxReleaseTime)
+
 {
     //Run Unit tests
-    if (true){
+    if (false){
         std::cout << "processor created";
         UnitTestRunner runner;
         runner.runAllTests();
@@ -250,17 +253,12 @@ void JenSx1000AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     
     oscillator.updateSampleRate(currentSampleRate);
     lfo.updateSampleRate(currentSampleRate);
+    ampEnvelope.setSampleRate(currentSampleRate);
+    vcf.setSampleRate(currentSampleRate);
     
     // The following params are dependant on the sample rate, so need to be updated after sampleRate set
     // TODO: work out the propper way to do this i.e. if the sample rate changes whilst in use it should keep the same values
     vcoGlideParam->setValueNotifyingHost(0.5);
-    vcaAttackParam->setValueNotifyingHost(0.3);
-    vcaDecayParam->setValueNotifyingHost(0.3);
-    vcaReleaseParam->setValueNotifyingHost(0.3);
-    
-    vcfAttackParam->setValueNotifyingHost(0.3);
-    vcfDecayParam->setValueNotifyingHost(0.3);    
-    vcfReleaseParam->setValueNotifyingHost(0.3);
 }
 
 void JenSx1000AudioProcessor::releaseResources()
@@ -381,10 +379,10 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
     else if (param == vcfResonanceParam) {vcf.setResonance(newValue);}
     else if (param == vcfLFOParam) {vcf.setLFOAmount(newValue);}
     else if (param == vcfEnvLevelParam) {vcf.setEnvLevel(newValue);}
-    else if (param == vcfAttackParam) {vcf.setAttackTime(newValue * currentSampleRate * 2);}
-    else if (param == vcfDecayParam) {vcf.setDecayTime(newValue * currentSampleRate * 2);}
+    else if (param == vcfAttackParam) {vcf.setAttackValue(newValue);}
+    else if (param == vcfDecayParam) {vcf.setDecayValue(newValue);}
     else if (param == vcfSustainParam) {vcf.setSustainAmplitude(newValue);}
-    else if (param == vcfReleaseParam) {vcf.setReleaseTime(newValue * currentSampleRate * 2);}
+    else if (param == vcfReleaseParam) {vcf.setReleaseValue(newValue);}
     else if (param == noiseNoiseParam) {
         if (newValue == 0) {noise.setState(NoiseGen::OFF);}
         else if (newValue == 0.5) {noise.setState(NoiseGen::WHITE);}
@@ -393,10 +391,10 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
     }
     else if (param == noiseLevelParam) {noiseLevel = newValue * 0.5;}
     else if (param == vcaOutputVolumeParam){ ampLevel = newValue; }
-    else if (param == vcaAttackParam) {ampEnvelope.setAttackTime(newValue * currentSampleRate * 2);}
-    else if (param == vcaDecayParam) {ampEnvelope.setDecayTime(newValue * currentSampleRate * 2);}
+    else if (param == vcaAttackParam) {ampEnvelope.setAttackValue(newValue);}
+    else if (param == vcaDecayParam) {ampEnvelope.setDecayValue(newValue);}
     else if (param == vcaSustainParam) {ampEnvelope.setSustainAmplitude(newValue);}
-    else if (param == vcaReleaseParam) {ampEnvelope.setReleaseTime(newValue * currentSampleRate * 2);}
+    else if (param == vcaReleaseParam) {ampEnvelope.setReleaseValue(newValue);}
 }
 
 //==============================================================================
