@@ -16,6 +16,7 @@
       <FILE id="O8h3Sa" name="EnvelopeTests.h" compile="0" resource="0" file="Source/EnvelopeTests.h"/>
     </GROUP>
     <GROUP id="{723F6252-F6C6-D731-16CE-67EBF008B70B}" name="Source">
+      <FILE id="aK3dzq" name="JenConstants.h" compile="0" resource="0" file="Source/JenConstants.h"/>
       <FILE id="zvB0Xr" name="FactoryPrograms.h" compile="0" resource="0"
             file="Source/FactoryPrograms.h"/>
       <GROUP id="{69062EDC-FD71-5F9F-096F-9E33FDD23FDB}" name="Logic">
