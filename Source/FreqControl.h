@@ -17,12 +17,12 @@
 #include "Glide.h"
 #include "Vibrato.h"
 
-class FreqControl: public Glide, public Vibrato{
+class FreqControl{
     
 public:
     
     enum Octave{
-        THIRTY_TWO = -28, SIXTEEN = -14, EIGHT = 0, FOUR = 14
+        THIRTY_TWO = -24, SIXTEEN = -12, EIGHT = 0, FOUR = 12
     };
     
     FreqControl();
@@ -39,12 +39,26 @@ public:
     
     void setOctave(Octave);
     
+    void setGlideValue(double);
+    
+    void setSampleRate(double);
+    
+    void setNextVibratoOscSample(float);
+    
+    void setVibratoValue(float);
+    
 private:
     
     float tuning;
     Octave currentOctave;
-    double getMidiNoteInHertz (float, const double frequencyOfA = 440);
+    
+    float targetNote;
+    float currentNote;
+    
+    Glide glide;
+    Vibrato vibrato;
 
+    double getMidiNoteInHertz (float, const double frequencyOfA = 440);
 };
 
 #endif  // FREQCONTROL_H_INCLUDED

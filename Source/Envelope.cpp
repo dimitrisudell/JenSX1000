@@ -45,7 +45,7 @@ void Envelope::setAttackValue(double aValue){
     jassert(aValue >= 0);
     jassert(aValue <= 1);
     //will cause errors if it is 0
-    
+    mCurrentAttackValue = aValue * 0.999 + 0.001;
     mAttackIncrement = maxAmplitude/(mCurrentAttackValue * mMaxAttackTime * mSampleRate); //returns nan if divide by 0
 }
 

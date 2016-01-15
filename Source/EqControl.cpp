@@ -19,11 +19,17 @@ EqControl::~EqControl() {
 }
 
 void EqControl::setCutoff(float level){
-    minCutoff = level;
+    jassert(level >= 0);
+    jassert(level <= 1);
+    
+    minCutoff = (level * (JenConstants::FilterCutOffMax - JenConstants::FilterCutOffMin)) + JenConstants::FilterCutOffMin;
     DBG("New Filter Cut Off: " + (String)masterCutoff);
 }
 
 void EqControl::setResonance(float level){
+    jassert(level >= 0);
+    jassert(level <= 1);
+    
     resonance = level;
     filter.setResonance(level);
 }
@@ -59,12 +65,9 @@ void EqControl::setSampleRate(double sampleRate){
 }
 
 double EqControl::processNextSample(double sample){
-    double envLevel = envLevel;
     float nextEnvSample = envelope.getNextSample();
-    filter.setCutoff(((0.9999 - minCutoff) * envLevel * nextEnvSample + minCutoff) * LFOSample);
+    filter.setCutoff(((JenConstants::FilterCutOffMax - minCutoff) * envLevel * nextEnvSample + minCutoff) * LFOSample);
     float processedSample = filter.process(sample);
-    jassert(processedSample >= -1);
-    jassert(processedSample <= 1);
     return processedSample;
 }
 

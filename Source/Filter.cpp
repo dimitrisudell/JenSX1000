@@ -22,8 +22,6 @@ float Filter::process(float inputValue) {
     buf3 += cutoff * (buf2 - buf3);
     switch (mode) {
         case FILTER_MODE_LOWPASS:
-            jassert(buf3 >= -1);
-            jassert(buf3 <= 1);
             return buf3;
         case FILTER_MODE_HIGHPASS:
             return inputValue - buf0;
@@ -35,24 +33,20 @@ float Filter::process(float inputValue) {
 }
 
 void Filter::setCutoff(double newCutoff) {
-    //cut off cannot be 1 because it will cause a 0 in feedbackAmount calculation i.e. assert((newCutoff < 1) & (newCutoff >= 0))
-    if (!(newCutoff < 1) || !(newCutoff >= 0)){
-        DBG("Cut of value is not valid : " + (String)newCutoff);
-        jassertfalse;
-    }
-    cutoff = newCutoff;
+    jassert(newCutoff >= 0);
+    jassert(newCutoff <= 1);
+    //cut off cannot be 1 because it will cause a 0 in feedbackAmount calculation
+    cutoff = newCutoff * 0.999;
     calculateFeedbackAmount();
 }
 
 void Filter::setResonance(double newResonance) {
+    jassert(newResonance >= 0);
+    jassert(newResonance <= 1);
     resonance = newResonance;
     calculateFeedbackAmount();
 }
 
 void Filter::setFilterMode(FilterMode newMode) {
     mode = newMode;
-}
-
-void Filter::calculateFeedbackAmount() {
-    feedbackAmount = resonance + resonance/(1.0 - cutoff);
 }

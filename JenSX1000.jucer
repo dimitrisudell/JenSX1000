@@ -12,6 +12,7 @@
               companyName="whatever">
   <MAINGROUP id="UY44e4" name="JenSX1000">
     <GROUP id="{90A78808-EF32-F50A-18A5-0C80CA23094F}" name="UnitTests">
+      <FILE id="Mf0KO7" name="FilterTests.h" compile="0" resource="0" file="Source/FilterTests.h"/>
       <FILE id="FwxOli" name="TestsHeader.h" compile="0" resource="0" file="Source/TestsHeader.h"/>
       <FILE id="O8h3Sa" name="EnvelopeTests.h" compile="0" resource="0" file="Source/EnvelopeTests.h"/>
     </GROUP>

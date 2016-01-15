@@ -23,6 +23,9 @@ namespace JenConstants{
     
     static double const GlideMaxTime = 2;
     
+    static double const FilterCutOffMax = 0.8;
+    static double const FilterCutOffMin = 0.06;
+    
 }
 
 

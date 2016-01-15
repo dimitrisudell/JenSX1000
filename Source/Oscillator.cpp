@@ -28,7 +28,7 @@ void Oscillator::updateFrequency(double freq){
 float Oscillator::getNextSample(){
     jassert(currentSampleRate > 0);
     jassert(currentFrequency > 0);
-    double value = naiveWaveformForMode(currentWave);
+    float value = naiveWaveformForMode(currentWave);
     currentPhase += phaseIncrement;
     while (currentPhase >= twoPI) {
         currentPhase -= twoPI;

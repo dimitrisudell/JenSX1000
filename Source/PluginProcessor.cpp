@@ -21,100 +21,47 @@ ampEnvelope(JenConstants::AmpEnvMaxAttackTime, JenConstants::AmpEnvMaxDecayTime,
 
 {
     //Run Unit tests
-    if (false){
+    if (true){
         std::cout << "processor created";
         UnitTestRunner runner;
         runner.runAllTests();
     }
     
     //------- VCO Params -------------------------------------------------------
-    
     addParameter(vcoTuneParam = new JenParameter(*this, "VCO tune", 0.5));
-    vcoTuneParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoOctaveParam = new JenParameter(*this, "VCO octave", 0, 4));
-    vcoOctaveParam->setValueNotifyingHost(0.67);
-    
     addParameter(vcoVibratoParam = new JenParameter(*this, "VCO vibrato", 0.5));
-    vcoVibratoParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoWaveformParam = new JenParameter(*this, "VCO waveform", 0.5, 3));
-    vcoWaveformParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoPulseWidthParam = new JenParameter(*this, "VCO pulse width", 0.5));
-    vcoPulseWidthParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoPWMParam = new JenParameter(*this, "VCO PWM", 0.5));
-    vcoPWMParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoLevelParam = new JenParameter(*this, "VCO level", 0.5));
-    vcoLevelParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcoGlideParam = new JenParameter(*this, "VCO glide", 0.5));
-    vcoGlideParam->setValueNotifyingHost(0.5);
     
     //------- LFO Params ------------------------------------------------------
-    
     addParameter(lfoSpeedParam = new JenParameter(*this, "LFO speed", 0.5));
-    lfoSpeedParam->setValueNotifyingHost(0.5);
     
     //------- VCF Params ------------------------------------------------------
-    
     addParameter(vcfFrequencyParam = new JenParameter(*this, "VCF frequency", 0.5));
-    vcfFrequencyParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcfResonanceParam = new JenParameter(*this, "VCF resonance", 0.5));
-    vcfResonanceParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcfLFOParam = new JenParameter(*this, "VCF LFO", 0.5));
-    vcfLFOParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcfEnvLevelParam = new JenParameter(*this, "VCF env. level", 0.5));
-    vcfEnvLevelParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcfAttackParam = new JenParameter(*this, "VCF attack", 0.3));
-    vcfAttackParam->setValueNotifyingHost(0.3);
-    
     addParameter(vcfDecayParam = new JenParameter(*this, "VCF decay", 0.3));
-    vcfDecayParam->setValueNotifyingHost(0.3);
-    
     addParameter(vcfSustainParam = new JenParameter(*this, "VCF sustain", 0.5));
-    vcfSustainParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcfReleaseParam = new JenParameter(*this, "VCF release", 0.3));
-    vcfReleaseParam->setValueNotifyingHost(0.3);
     
     //------- Noise Params ----------------------------------------------------
-    
     addParameter(noiseNoiseParam = new JenParameter(*this, "NOISE noise", 0.5, 3));
-    noiseNoiseParam->setValueNotifyingHost(0.5);
-    
     addParameter(noiseLevelParam = new JenParameter(*this, "NOISE level", 0.5));
-    noiseLevelParam->setValueNotifyingHost(0.5);
     
     //------- VCA Params ------------------------------------------------------
-    
     addParameter(vcaOutputVolumeParam = new JenParameter(*this, "VCA level", 0.5));
-    vcaOutputVolumeParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcaAttackParam = new JenParameter(*this, "VCA attack", 0.3));
-    vcaAttackParam->setValueNotifyingHost(0.3);
-    
     addParameter(vcaDecayParam = new JenParameter(*this, "VCA decay", 0.3));
-    vcaDecayParam->setValueNotifyingHost(0.3);
-    
     addParameter(vcaSustainParam = new JenParameter(*this, "VCA sustain", 0.5));
-    vcaSustainParam->setValueNotifyingHost(0.5);
-    
     addParameter(vcaReleaseParam = new JenParameter(*this, "VCA release", 0.3));
-    vcaReleaseParam->setValueNotifyingHost(0.3);
-
     
-    lfo.updateWave(Oscillator::TRIANGLE);
-    lfo.updateFrequency(1);
-    oscillator.updateFrequency(1);
-    
-    DBG("\n-- JenSx1000AudioProcessor constructor called\n");
+    setCurrentProgram(0);
 }
 
 JenSx1000AudioProcessor::~JenSx1000AudioProcessor()
@@ -266,19 +213,6 @@ void JenSx1000AudioProcessor::releaseResources()
 
 void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    
-    //DBG("\n-- JenSx1000AudioProcessor::processBlock called\n");
-    
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // I've added this to avoid people getting screaming feedback
-    // when they first compile the plugin, but obviously you don't need to
-    // this code if your algorithm already fills all the output channels.
-    
-    for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-    
     int time;
     MidiMessage m;
     
@@ -305,7 +239,11 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
     }
     
-    float* const firstChannelData = buffer.getWritePointer(0);
+    std::vector<float*> ChannelData;
+    
+    for (int i = 0; i < getNumOutputChannels(); i++){
+        ChannelData.push_back(buffer.getWritePointer(i));
+    }
     
     for (int sample = 0; sample < buffer.getNumSamples(); ++sample){
         
@@ -322,22 +260,10 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         
         float nextSample = (vcf.processNextSample((nextOscSample * vcoLevel) + (nextNoiseSample * noiseLevel)) * nextAmpSample) * ampLevel;
         
-        jassert(nextSample <= 1);
-        jassert(nextSample >= -1);
-        
-        firstChannelData[sample] = nextSample;
+        for (float* channel : ChannelData){
+            channel[sample] = nextSample;
+        }
     }
-    
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    /*
-    for (int channel = 0; channel < getNumInputChannels(); ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
-     */
 }
 
 //==============================================================================
@@ -361,7 +287,7 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
         else if (newValue == 0){freqControl.setOctave(FreqControl::THIRTY_TWO);}
         else {DBG("OCTAVE SETTING NOT KNOWN"); jassertfalse;}
     }
-    else if (param == vcoVibratoParam) {freqControl.setVibratoAmount(newValue);}
+    else if (param == vcoVibratoParam) {freqControl.setVibratoValue(newValue);}
     else if (param == vcoWaveformParam) {
         if (newValue == 0){oscillator.updateWave(Oscillator::SAW);}
         else if (newValue == 0.5){oscillator.updateWave(Oscillator::SQUARE);}
@@ -376,7 +302,7 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
         float lfoFrequency = newValue * 24.75 + 0.25;
         DBG("New LFO speed: " + (String)lfoFrequency); lfo.updateFrequency(lfoFrequency);
     }
-    else if (param == vcfFrequencyParam) {vcf.setCutoff(newValue * 0.74 + 0.06);}
+    else if (param == vcfFrequencyParam) {vcf.setCutoff(newValue);}
     else if (param == vcfResonanceParam) {vcf.setResonance(newValue);}
     else if (param == vcfLFOParam) {vcf.setLFOAmount(newValue);}
     else if (param == vcfEnvLevelParam) {vcf.setEnvLevel(newValue);}

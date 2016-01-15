@@ -11,17 +11,14 @@
 #include "Glide.h"
 #include "JuceHeader.h"
 
-Glide::Glide(double maxGlideTime, double sampleRate): targetNote(72), currentNote(0.0), mFirstGlide(true), mMaxGlideTime(maxGlideTime), mGlideValue(0.5), mTotalGlideDistance(0.0), mGlideDistanceLeft(0.0)
+Glide::Glide(double maxGlideTime, double sampleRate): mFirstGlide(true), mMaxGlideTime(maxGlideTime), mGlideValue(0.5), mTotalGlideDistance(0.0), mGlideDistanceLeft(0.0)
 {
     setSampleRate(sampleRate);
 }
 
-void Glide::setGlide() {
-    DBG("current note : " + (String)currentNote);
+void Glide::setGlide(double currentNote, double targetNote) {
     if (mFirstGlide == false) {mTotalGlideDistance = targetNote - currentNote;};
     mGlideDistanceLeft = mTotalGlideDistance;
-    DBG("glide distance left : " + (String)mGlideDistanceLeft);
-    DBG("total glide distance : " + (String)mTotalGlideDistance);
     updateGlideIncrement();
     mFirstGlide = false;
 }

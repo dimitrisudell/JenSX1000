@@ -34,8 +34,6 @@ public:
 
 private:
     
-    inline void calculateFeedbackAmount();
-    
     double cutoff;
     double resonance;
     FilterMode mode;
@@ -45,6 +43,8 @@ private:
     float buf1;
     float buf2;
     float buf3;
+    
+    inline void calculateFeedbackAmount(){feedbackAmount = resonance + resonance/(1.0 - cutoff);};
 };
 
 #endif  // FILTER_H_INCLUDED

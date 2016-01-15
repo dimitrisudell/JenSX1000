@@ -12,8 +12,10 @@
 #define TESTSHEADER_H_INCLUDED
 
 #include "EnvelopeTests.h"
+#include "FilterTests.h"
 
 static EnvelopeTests envelopeTests;
+static FilterTests filterTests;
 
 
 

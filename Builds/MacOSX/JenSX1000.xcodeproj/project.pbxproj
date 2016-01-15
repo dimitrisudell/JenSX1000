@@ -603,6 +603,7 @@
 		8963DE890505948DE5912575 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_win32_ActiveXComponent.cpp"; path = "../../../JUCE-OSX/modules/juce_gui_extra/native/juce_win32_ActiveXComponent.cpp"; sourceTree = "SOURCE_ROOT"; };
 		8A29D34FB5C6C32E43E348FE = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_win32_AudioCDReader.cpp"; path = "../../../JUCE-OSX/modules/juce_audio_devices/native/juce_win32_AudioCDReader.cpp"; sourceTree = "SOURCE_ROOT"; };
 		8A7E88181CE4B3FB8929D65A = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_AudioCDReader.cpp"; path = "../../../JUCE-OSX/modules/juce_audio_devices/audio_cd/juce_AudioCDReader.cpp"; sourceTree = "SOURCE_ROOT"; };
+		8A97F56EEBAE797A0AD66F49 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FilterTests.h; path = ../../Source/FilterTests.h; sourceTree = "SOURCE_ROOT"; };
 		8AD5A4385D01573B4FA2B648 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_LookAndFeel_V3.h"; path = "../../../JUCE-OSX/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel_V3.h"; sourceTree = "SOURCE_ROOT"; };
 		8AEE2271C9E7520CDCCE9BED = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_AudioProcessorEditor.h"; path = "../../../JUCE-OSX/modules/juce_audio_processors/processors/juce_AudioProcessorEditor.h"; sourceTree = "SOURCE_ROOT"; };
 		8B069DA36E6E94A1A03EFC30 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_win32_HiddenMessageWindow.h"; path = "../../../JUCE-OSX/modules/juce_events/native/juce_win32_HiddenMessageWindow.h"; sourceTree = "SOURCE_ROOT"; };
@@ -1066,6 +1067,7 @@
 		FFAD0C1C99035F948E8C27E2 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_DragAndDropContainer.cpp"; path = "../../../JUCE-OSX/modules/juce_gui_basics/mouse/juce_DragAndDropContainer.cpp"; sourceTree = "SOURCE_ROOT"; };
 		FFD2741F805EE4A7D4D81462 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_WindowsHooks.h"; path = "../../../JUCE-OSX/modules/juce_audio_plugin_client/utility/juce_WindowsHooks.h"; sourceTree = "SOURCE_ROOT"; };
 		5E7615AC05DD09FE9F27FB57 = {isa = PBXGroup; children = (
+					8A97F56EEBAE797A0AD66F49,
 					D09B0B37E1EC6034C37B1244,
 					8DC9A6007AFE8E3483CE9923, ); name = UnitTests; sourceTree = "<group>"; };
 		B7729E1B44ABFD801AAA9D11 = {isa = PBXGroup; children = (

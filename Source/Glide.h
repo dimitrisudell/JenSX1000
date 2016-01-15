@@ -18,7 +18,7 @@ public:
     
     Glide(double maxGlideTime, double sampleRate = 44000.00);
     
-    void setGlide();
+    void setGlide(double currentNote, double targetNote);
     
     void setGlideValue(double);
     
@@ -28,8 +28,7 @@ public:
     
 protected:
     
-    float targetNote;
-    float currentNote;
+    
     
 private:
     
