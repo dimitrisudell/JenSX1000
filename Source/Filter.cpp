@@ -22,6 +22,8 @@ float Filter::process(float inputValue) {
     buf3 += cutoff * (buf2 - buf3);
     switch (mode) {
         case FILTER_MODE_LOWPASS:
+            jassert(buf3 >= -1);
+            jassert(buf3 <= 1);
             return buf3;
         case FILTER_MODE_HIGHPASS:
             return inputValue - buf0;

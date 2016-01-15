@@ -16,11 +16,13 @@ class Glide{
     
 public:
     
-    Glide();
+    Glide(double maxGlideTime, double sampleRate = 44000.00);
     
     void setGlide();
     
-    void setGlideTime(double);
+    void setGlideValue(double);
+    
+    void setSampleRate(double sampleRate);
     
     float getNextGlideIncrement();
     
@@ -31,12 +33,14 @@ protected:
     
 private:
     
-    bool firstGlide;
-    bool glideEngaged;
-    double glideTime; //glide time is messured in samples
-    float glideIncrement; //percent of note distance to increase each sample
-    float totalGlideDistance;
-    float glideDistanceLeft;
+    bool mFirstGlide;
+    double mMaxGlideTime;
+    double mGlideValue;
+    float mGlideIncrement; //percent of note distance to increase each sample
+    float mTotalGlideDistance;
+    float mGlideDistanceLeft;
+    double mSampleRate;
+    
     void updateGlideIncrement();
     
 };

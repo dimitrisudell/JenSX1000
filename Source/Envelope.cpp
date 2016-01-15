@@ -45,11 +45,7 @@ void Envelope::setAttackValue(double aValue){
     jassert(aValue >= 0);
     jassert(aValue <= 1);
     //will cause errors if it is 0
-    if (aValue <= 0){
-        mCurrentAttackValue = 0.001;
-    } else {
-        mCurrentAttackValue = aValue;
-    }
+    
     mAttackIncrement = maxAmplitude/(mCurrentAttackValue * mMaxAttackTime * mSampleRate); //returns nan if divide by 0
 }
 
@@ -58,11 +54,7 @@ void Envelope::setReleaseValue(double rValue) {
     jassert(rValue <= 1);
     jassert(mSustainAmplitude >= minAmplitude);
     //will cause errors if it is 0
-    if (rValue <= 0){
-        mCurrentReleaseValue = 0.001;
-    } else {
-        mCurrentReleaseValue = rValue;
-    }
+    mCurrentReleaseValue = rValue * 0.999 + 0.001;
     mReleaseIncrement = mCurrentAmplitude/(mCurrentReleaseValue * mMaxReleaseTime * mSampleRate); //returns nan if divide by 0
 }
 
@@ -71,11 +63,7 @@ void Envelope::setDecayValue(double dValue) {
     jassert(dValue <= 1);
     jassert(mSustainAmplitude >= minAmplitude);
     //will cause errors if it is 0
-    if (dValue <= 0){
-        mCurrentDecayValue = 0.001;
-    } else {
-        mCurrentDecayValue = dValue;
-    }
+    mCurrentDecayValue = dValue * 0.999 + 0.001;
     mDecayIncrement = (maxAmplitude - mSustainAmplitude) / (mCurrentDecayValue * mMaxDecayTime * mSampleRate); //returns nan if divide by 0
 }
 

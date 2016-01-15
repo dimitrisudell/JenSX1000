@@ -9,9 +9,10 @@
 */
 
 #include "FreqControl.h"
+#include "JenConstants.h"
 
 
-    FreqControl::FreqControl(): tuning(0), currentOctave(EIGHT){};
+    FreqControl::FreqControl(): Glide(JenConstants::GlideMaxTime), tuning(0), currentOctave(EIGHT){};
 
     void FreqControl::setTuning(float semitones) {tuning = semitones;};
     

@@ -33,6 +33,8 @@ void EqControl::setLFOAmount(float level){
 }
 
 void EqControl::setEnvLevel(float level){
+    jassert(level >= 0);
+    jassert(level <= 1);
     envLevel = level;
 }
 
@@ -57,8 +59,13 @@ void EqControl::setSampleRate(double sampleRate){
 }
 
 double EqControl::processNextSample(double sample){
-    filter.setCutoff(((0.9999 - minCutoff) * envLevel * envelope.getNextSample() + minCutoff) * LFOSample);
-    return filter.process(sample);
+    double envLevel = envLevel;
+    float nextEnvSample = envelope.getNextSample();
+    filter.setCutoff(((0.9999 - minCutoff) * envLevel * nextEnvSample + minCutoff) * LFOSample);
+    float processedSample = filter.process(sample);
+    jassert(processedSample >= -1);
+    jassert(processedSample <= 1);
+    return processedSample;
 }
 
 void EqControl::begin(){

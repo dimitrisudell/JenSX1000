@@ -11,35 +11,47 @@
 #include "Glide.h"
 #include "JuceHeader.h"
 
-Glide::Glide(): targetNote(72), currentNote(0.0), firstGlide(true), glideEngaged(false), glideTime(1), totalGlideDistance(0.0), glideDistanceLeft(0.0) {};
+Glide::Glide(double maxGlideTime, double sampleRate): targetNote(72), currentNote(0.0), mFirstGlide(true), mMaxGlideTime(maxGlideTime), mGlideValue(0.5), mTotalGlideDistance(0.0), mGlideDistanceLeft(0.0)
+{
+    setSampleRate(sampleRate);
+}
 
 void Glide::setGlide() {
     DBG("current note : " + (String)currentNote);
-    if (firstGlide == false) {totalGlideDistance = targetNote - currentNote;;};
-    glideDistanceLeft = totalGlideDistance;
-    DBG("glide distance left : " + (String)glideDistanceLeft);
-    DBG("total glide distance : " + (String)totalGlideDistance);
+    if (mFirstGlide == false) {mTotalGlideDistance = targetNote - currentNote;};
+    mGlideDistanceLeft = mTotalGlideDistance;
+    DBG("glide distance left : " + (String)mGlideDistanceLeft);
+    DBG("total glide distance : " + (String)mTotalGlideDistance);
     updateGlideIncrement();
-    firstGlide = false;
+    mFirstGlide = false;
 }
 
-void Glide::setGlideTime(double samples) {
-    glideTime = samples + 1; //extra logic would be needed if glideTime becomes 0, so instead I make 1 the minimum value
+void Glide::setGlideValue(double value) {
+    jassert(value >= 0);
+    jassert(value <= 1);
+    //will cause errors if it is 0
+    mGlideValue = value * 0.999 + 0.001;
+    updateGlideIncrement();
+}
+
+void Glide::setSampleRate(double sampleRate){
+    jassert(sampleRate > 0);
+    mSampleRate = sampleRate;
     updateGlideIncrement();
 }
 
 float Glide::getNextGlideIncrement() {
-    if (totalGlideDistance < 0){
-        if (glideDistanceLeft < 0) {glideDistanceLeft -= glideIncrement;};
-        return glideDistanceLeft;
+    if (mTotalGlideDistance < 0){
+        if (mGlideDistanceLeft < 0) {mGlideDistanceLeft -= mGlideIncrement;};
+        return mGlideDistanceLeft;
     }
     else {
-        if (glideDistanceLeft > 0) {glideDistanceLeft -= glideIncrement;};
-        return glideDistanceLeft;
+        if (mGlideDistanceLeft > 0) {mGlideDistanceLeft -= mGlideIncrement;};
+        return mGlideDistanceLeft;
     };
     
 }
 
 void Glide::updateGlideIncrement() {
-    glideIncrement = totalGlideDistance / glideTime;
+    mGlideIncrement = mTotalGlideDistance / (mGlideValue * mMaxGlideTime * mSampleRate);
 };

@@ -21,6 +21,8 @@ namespace JenConstants{
     static double const FilterEnvMaxDecayTime = 2;
     static double const FilterEnvMaxReleaseTime = 2;
     
+    static double const GlideMaxTime = 2;
+    
 }
 
 

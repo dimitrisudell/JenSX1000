@@ -255,10 +255,7 @@ void JenSx1000AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     lfo.updateSampleRate(currentSampleRate);
     ampEnvelope.setSampleRate(currentSampleRate);
     vcf.setSampleRate(currentSampleRate);
-    
-    // The following params are dependant on the sample rate, so need to be updated after sampleRate set
-    // TODO: work out the propper way to do this i.e. if the sample rate changes whilst in use it should keep the same values
-    vcoGlideParam->setValueNotifyingHost(0.5);
+    freqControl.setSampleRate(currentSampleRate);
 }
 
 void JenSx1000AudioProcessor::releaseResources()
@@ -319,7 +316,11 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         
         oscillator.updateFrequency(freqControl.getNextFrequency());
         
-        float nextSample = (vcf.processNextSample((oscillator.getNextSample() * vcoLevel) + (noise.getNextSample() * noiseLevel)) * ampEnvelope.getNextSample()) * ampLevel;
+        float nextOscSample = oscillator.getNextSample();
+        float nextNoiseSample = noise.getNextSample();
+        float nextAmpSample = ampEnvelope.getNextSample();
+        
+        float nextSample = (vcf.processNextSample((nextOscSample * vcoLevel) + (nextNoiseSample * noiseLevel)) * nextAmpSample) * ampLevel;
         
         jassert(nextSample <= 1);
         jassert(nextSample >= -1);
@@ -370,7 +371,7 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
     else if (param == vcoPulseWidthParam) {oscillator.setPulseWidth(((1 - newValue) * 45) + 5);}
     else if (param == vcoPWMParam) {oscillator.setPWMamount(newValue);}
     else if (param == vcoLevelParam) { vcoLevel = (newValue * 0.5); }
-    else if (param == vcoGlideParam) { freqControl.setGlideTime(newValue * currentSampleRate * 2);}
+    else if (param == vcoGlideParam) { freqControl.setGlideValue(newValue);}
     else if (param == lfoSpeedParam) {
         float lfoFrequency = newValue * 24.75 + 0.25;
         DBG("New LFO speed: " + (String)lfoFrequency); lfo.updateFrequency(lfoFrequency);

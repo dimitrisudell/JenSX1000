@@ -17,7 +17,7 @@
 #include "Glide.h"
 #include "Vibrato.h"
 
-class FreqControl: public Vibrato, public Glide{
+class FreqControl: public Glide, public Vibrato{
     
 public:
     
