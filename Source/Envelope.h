@@ -21,7 +21,7 @@ public:
     
     //Set Envelope times in seconds
     //sampleRate - number samples per second
-    Envelope(double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate = 44000.00);
+    Envelope (double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate = 44000.00);
     
     void begin();
     
@@ -46,11 +46,11 @@ public:
     
 private:
     
-    State state;
+    State mState;
     void updateState(State);
     
-    const float maxAmplitude = 1;
-    const float minAmplitude = 0;
+    const float mMaxAmplitude = 1;
+    const float mMinAmplitude = 0;
     
     double mSampleRate;
     
@@ -68,6 +68,10 @@ private:
     double mMaxReleaseTime;
     double mCurrentReleaseValue;
     float mReleaseIncrement;
+    
+    void calculateAttackIncrement();
+    void calculateDecayIncrement();
+    void calculateReleaseIncrement();
     
 };
 

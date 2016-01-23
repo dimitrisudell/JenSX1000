@@ -12,51 +12,58 @@
 #include "JuceHeader.h"
 
 
-PolyBlepOscillator::PolyBlepOscillator() : lastOutput(0.0) {
-    currentWave = SINE;
-    currentPhase = 0; updatePhaseIncrement(); updateFrequency(440);};
+PolyBlepOscillator::PolyBlepOscillator() : mLastOutput(0.0)
+{
+    mCurrentWave = SINE;
+    mCurrentPhase = 0;
+    updatePhaseIncrement();
+    updateFrequency(440);
+}
 
-float PolyBlepOscillator::getNextSample(){
-    jassert(currentSampleRate > 0);
-    jassert(currentFrequency > 0);
+float PolyBlepOscillator::getNextSample()
+{
+    jassert(mCurrentSampleRate > 0);
+    jassert(mCurrentFrequency > 0);
     
-    double t = currentPhase / twoPI;
+    double t = mCurrentPhase / twoPI;
     
     float value;
-    switch (currentWave){
+    switch (mCurrentWave){
         case SINE:
             value = naiveWaveformForMode(SINE);
             break;
         case SAW:
             value = naiveWaveformForMode(SAW);
-            value -= poly_blep(t);
+            value -= polyBlep(t);
             break;
         case PULSE:
             value = naiveWaveformForMode(PULSE);
-            value += poly_blep(t);
-            value -= poly_blep(fmod(t + (1 - pulseWidthFaction), 1.0));
+            value += polyBlep(t);
+            value -= polyBlep(fmod(t + (1 - mPulseWidthFaction), 1.0));
             break;
         default:
             value = naiveWaveformForMode(SQUARE);
-            value += poly_blep(t);
-            value -= poly_blep(fmod(t + 0.5, 1.0));
-            if (currentWave == TRIANGLE) {
+            value += polyBlep(t);
+            value -= polyBlep(fmod(t + 0.5, 1.0));
+            if (mCurrentWave == TRIANGLE) {
                 // Leaky integrator: y[n] = A * x[n] + (1 - A) * y[n-1]
-                value = phaseIncrement * value + (1 - phaseIncrement) * lastOutput;
-                lastOutput = value;
+                value = mPhaseIncrement * value + (1 - mPhaseIncrement) * mLastOutput;
+                mLastOutput = value;
             }
     }
     
+    mCurrentPhase += mPhaseIncrement;
     
-    currentPhase += phaseIncrement;
-    while (currentPhase >= twoPI) {
-        currentPhase -= twoPI;
+    while (mCurrentPhase >= twoPI) {
+        mCurrentPhase -= twoPI;
     }
+    
     return value;
 }
 
-double PolyBlepOscillator::poly_blep(double t){
-    double dt = phaseIncrement / twoPI;
+double PolyBlepOscillator::polyBlep (double t)
+{
+    double dt = mPhaseIncrement / twoPI;
     // 0 <= t < 1
     if (t < dt) {
         t /= dt;

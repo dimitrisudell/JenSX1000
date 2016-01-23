@@ -11,9 +11,9 @@
 #include "Envelope.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
-Envelope::Envelope(double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate):
+Envelope::Envelope (double maxAttackTime, double maxDecayTime, double maxReleaseTime, double sampleRate) :
 mSampleRate(sampleRate),
-mCurrentAmplitude(minAmplitude),
+mCurrentAmplitude(mMinAmplitude),
 mMaxAttackTime(maxAttackTime),
 mCurrentAttackValue(0.5),
 mMaxDecayTime(maxDecayTime),
@@ -27,55 +27,84 @@ mCurrentReleaseValue(0.5)
     jassert(sampleRate > 0);
     
     updateState(OFF);
-    setSustainAmplitude(minAmplitude);
+    setSustainAmplitude(mMinAmplitude);
     setSampleRate(sampleRate);
 }
 
-void Envelope::begin() {
+void Envelope::begin()
+{
     updateState(ATTACK);
-    mCurrentAmplitude = minAmplitude;
+    mCurrentAmplitude = mMinAmplitude;
 }
 
-void Envelope::release() {
+void Envelope::release()
+{
+    DBG("release() called");
     setReleaseValue(mCurrentReleaseValue);
     updateState(RELEASE);
 }
 
-void Envelope::setAttackValue(double aValue){
+void Envelope::setAttackValue (double aValue)
+{
     jassert(aValue >= 0);
     jassert(aValue <= 1);
-    //will cause errors if it is 0
-    mCurrentAttackValue = aValue * 0.999 + 0.001;
-    mAttackIncrement = maxAmplitude/(mCurrentAttackValue * mMaxAttackTime * mSampleRate); //returns nan if divide by 0
+    mCurrentAttackValue = aValue;
+    calculateAttackIncrement();
 }
 
-void Envelope::setReleaseValue(double rValue) {
+void Envelope::calculateAttackIncrement()
+{
+    jassert(mCurrentAttackValue >= 0);
+    jassert(mCurrentAttackValue <= 1);
+    mAttackIncrement = mMaxAmplitude/((mCurrentAttackValue * 0.99999999 + 0.00000001) * mMaxAttackTime * mSampleRate); //returns nan if divide by 0
+}
+
+void Envelope::setReleaseValue (double rValue)
+{
     jassert(rValue >= 0);
     jassert(rValue <= 1);
-    jassert(mSustainAmplitude >= minAmplitude);
-    //will cause errors if it is 0
-    mCurrentReleaseValue = rValue * 0.999 + 0.001;
-    mReleaseIncrement = mCurrentAmplitude/(mCurrentReleaseValue * mMaxReleaseTime * mSampleRate); //returns nan if divide by 0
+    jassert(mSustainAmplitude >= mMinAmplitude);
+    mCurrentReleaseValue = rValue;
+    calculateReleaseIncrement();
 }
 
-void Envelope::setDecayValue(double dValue) {
+void Envelope::calculateReleaseIncrement()
+{
+    DBG("calculateReleaseIncrement called");
+    jassert(mCurrentReleaseValue >= 0);
+    jassert(mCurrentReleaseValue <= 1);
+    jassert(mCurrentAmplitude >= 0);
+    jassert(mCurrentAmplitude <= 1);
+    mReleaseIncrement = mCurrentAmplitude/((mCurrentReleaseValue * 0.99999999 + 0.00000001) * mMaxReleaseTime * mSampleRate); //returns nan if divide by 0
+}
+
+void Envelope::setDecayValue (double dValue)
+{
     jassert(dValue >= 0);
     jassert(dValue <= 1);
-    jassert(mSustainAmplitude >= minAmplitude);
-    //will cause errors if it is 0
-    mCurrentDecayValue = dValue * 0.999 + 0.001;
-    mDecayIncrement = (maxAmplitude - mSustainAmplitude) / (mCurrentDecayValue * mMaxDecayTime * mSampleRate); //returns nan if divide by 0
+    jassert(mSustainAmplitude >= mMinAmplitude);
+    mCurrentDecayValue = dValue;
+    calculateDecayIncrement();
 }
 
-void Envelope::setSustainAmplitude(double sAmplitude){
-    jassert(sAmplitude >= minAmplitude);
-    jassert(sAmplitude <= maxAmplitude);
+void Envelope::calculateDecayIncrement()
+{
+    jassert(mCurrentDecayValue >= 0);
+    jassert(mCurrentDecayValue <= 1);
+    mDecayIncrement = (mMaxAmplitude - mSustainAmplitude) / ((mCurrentDecayValue * 0.99999999 + 0.00000001) * mMaxDecayTime * mSampleRate); //returns nan if divide by 0
+}
+
+void Envelope::setSustainAmplitude (double sAmplitude)
+{
+    jassert(sAmplitude >= mMinAmplitude);
+    jassert(sAmplitude <= mMaxAmplitude);
     mSustainAmplitude = sAmplitude;
     setReleaseValue(mCurrentReleaseValue);
     setDecayValue(mCurrentDecayValue);
 }
 
-void Envelope::setSampleRate(double sampleRate){
+void Envelope::setSampleRate (double sampleRate)
+{
     jassert(sampleRate > 0);
     mSampleRate = sampleRate;
     setAttackValue(mCurrentAttackValue);
@@ -83,11 +112,12 @@ void Envelope::setSampleRate(double sampleRate){
     setReleaseValue(mCurrentReleaseValue);
 }
 
-float Envelope::getNextSample(){
-    switch (state){
+float Envelope::getNextSample()
+{
+    switch (mState){
         case ATTACK:
             mCurrentAmplitude += mAttackIncrement;
-            if (mCurrentAmplitude >= maxAmplitude) {mCurrentAmplitude = maxAmplitude; updateState(DECAY);}
+            if (mCurrentAmplitude >= mMaxAmplitude) {mCurrentAmplitude = mMaxAmplitude; updateState(DECAY);}
             break;
         case DECAY:
             mCurrentAmplitude -= mDecayIncrement;
@@ -97,16 +127,17 @@ float Envelope::getNextSample(){
             break;
         case RELEASE:
             mCurrentAmplitude -= mReleaseIncrement;
-            if (mCurrentAmplitude <= minAmplitude) {mCurrentAmplitude = minAmplitude; updateState(OFF);}
+            if (mCurrentAmplitude <= mMinAmplitude) {mCurrentAmplitude = mMinAmplitude; updateState(OFF);}
         case OFF:
             break;
     }
-    jassert(mCurrentAmplitude >= minAmplitude);
-    jassert(mCurrentAmplitude <= maxAmplitude);
+    jassert(mCurrentAmplitude >= mMinAmplitude);
+    jassert(mCurrentAmplitude <= mMaxAmplitude);
     return mCurrentAmplitude;
     
 };
 
-void Envelope::updateState(State s){
-    state = s;
+void Envelope::updateState(State s)
+{
+    mState = s;
 }

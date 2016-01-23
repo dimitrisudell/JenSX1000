@@ -25,9 +25,9 @@ public:
     
 private:
     
-    double poly_blep(double);
+    double polyBlep(double);
     
-    double lastOutput;
+    double mLastOutput;
 };
 
 #endif  // POLYBLEPOSCILLATOR_H_INCLUDED

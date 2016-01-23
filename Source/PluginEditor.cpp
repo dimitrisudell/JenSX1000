@@ -144,32 +144,45 @@ void JenSx1000AudioProcessorEditor::resized()
     const int spacingX = 106;
     const int spacingY = 120;
     
-    vcoTune.setTopLeftPosition(0,0);
-    vcoOctave.setTopLeftPosition(vcoTune.getPosition().getX() + spacingX, 0);
-    vcoVibrato.setTopLeftPosition(vcoOctave.getPosition().getX() + spacingX, 0);
-    lfoSpeed.setTopLeftPosition(vcoVibrato.getPosition().getX() + spacingX, 0);
-    vcfFrequency.setTopLeftPosition(lfoSpeed.getPosition().getX() + spacingX, 0);
-    vcfResonance.setTopLeftPosition(vcfFrequency.getPosition().getX() + spacingX, 0);
-    vcfLFO.setTopLeftPosition(vcfResonance.getPosition().getX() + spacingX, 0);
-    vcfEnvLevel.setTopLeftPosition(vcfLFO.getPosition().getX() + spacingX, 0);
+    const int firstRowY = 10;
+    const int secondRowY = firstRowY + spacingY;
+    const int thirdRowY = secondRowY + spacingY;
     
-    vcoWaveform.setTopLeftPosition(vcoTune.getPosition().getX(), spacingY);
-    vcoPulseWidth.setTopLeftPosition(vcoOctave.getPosition().getX(), spacingY);
-    vcoPWM.setTopLeftPosition(vcoVibrato.getPosition().getX(), spacingY);
-    vcoLevel.setTopLeftPosition(lfoSpeed.getPosition().getX(), spacingY);
-    vcfAttack.setTopLeftPosition(vcfFrequency.getPosition().getX(), spacingY);
-    vcfDecay.setTopLeftPosition(vcfResonance.getPosition().getX(), spacingY);
-    vcfSustain.setTopLeftPosition(vcfLFO.getPosition().getX(), spacingY);
-    vcfRelease.setTopLeftPosition(vcfEnvLevel.getPosition().getX(), spacingY);
+    const int firstRowX = 10;
+    const int secondRowX = firstRowX + spacingX;
+    const int thirdRowX = secondRowX + spacingX;
+    const int forthRowX = thirdRowX + spacingX;
+    const int fifthRowX = forthRowX + spacingX;
+    const int sixthRowX = fifthRowX + spacingX;
+    const int seventhRowX = sixthRowX + spacingX;
+    const int eigthRowX = seventhRowX + spacingX;
     
-    vcoGlide.setTopLeftPosition(vcoTune.getPosition().getX(), spacingY * 2);
-    noiseNoise.setTopLeftPosition(vcoOctave.getPosition().getX(), spacingY * 2);
-    noiseLevel.setTopLeftPosition(vcoVibrato.getPosition().getX(), spacingY * 2);
-    vcaOutputVolume.setTopLeftPosition(lfoSpeed.getPosition().getX(), spacingY * 2);
-    vcaAttack.setTopLeftPosition(vcfFrequency.getPosition().getX(), spacingY * 2);
-    vcaDecay.setTopLeftPosition(vcfResonance.getPosition().getX(), spacingY * 2);
-    vcaSustain.setTopLeftPosition(vcfLFO.getPosition().getX(), spacingY * 2);
-    vcaRelease.setTopLeftPosition(vcfEnvLevel.getPosition().getX(), spacingY * 2);
+    vcoTune.setTopLeftPosition(firstRowX, firstRowY);
+    vcoOctave.setTopLeftPosition(secondRowX, firstRowY);
+    vcoVibrato.setTopLeftPosition(thirdRowX, firstRowY);
+    lfoSpeed.setTopLeftPosition(forthRowX, firstRowY);
+    vcfFrequency.setTopLeftPosition(fifthRowX, firstRowY);
+    vcfResonance.setTopLeftPosition(sixthRowX, firstRowY);
+    vcfLFO.setTopLeftPosition(seventhRowX, firstRowY);
+    vcfEnvLevel.setTopLeftPosition(eigthRowX, firstRowY);
+    
+    vcoWaveform.setTopLeftPosition(firstRowX, secondRowY);
+    vcoPulseWidth.setTopLeftPosition(secondRowX, secondRowY);
+    vcoPWM.setTopLeftPosition(thirdRowX, secondRowY);
+    vcoLevel.setTopLeftPosition(forthRowX, secondRowY);
+    vcfAttack.setTopLeftPosition(fifthRowX, secondRowY);
+    vcfDecay.setTopLeftPosition(sixthRowX, secondRowY);
+    vcfSustain.setTopLeftPosition(seventhRowX, secondRowY);
+    vcfRelease.setTopLeftPosition(eigthRowX, secondRowY);
+    
+    vcoGlide.setTopLeftPosition(firstRowX, thirdRowY);
+    noiseNoise.setTopLeftPosition(secondRowX, thirdRowY);
+    noiseLevel.setTopLeftPosition(thirdRowX, thirdRowY);
+    vcaOutputVolume.setTopLeftPosition(forthRowX, thirdRowY);
+    vcaAttack.setTopLeftPosition(fifthRowX, thirdRowY);
+    vcaDecay.setTopLeftPosition(sixthRowX, thirdRowY);
+    vcaSustain.setTopLeftPosition(seventhRowX, thirdRowY);
+    vcaRelease.setTopLeftPosition(eigthRowX, thirdRowY);
     
 }
 

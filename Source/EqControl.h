@@ -12,7 +12,7 @@
 #define EQCONTROL_H_INCLUDED
 
 #include "Envelope.h"
-#include "Filter.h"
+#include "LowPassFilter.h"
 #include "JuceHeader.h"
 
 class EqControl{
@@ -49,17 +49,13 @@ public:
     void setNextLFOSample(double);
     
 private:
-    Envelope envelope;
-    Filter filter;
-    float masterCutoff;
-    float minCutoff;
-    float envCuttoff;
-    float afterEnvCutoff;
-    float resonance;
-    float lfoAmount;
-    float envLevel;
-    double LFOSample;
-    float LFOAmount;
+    Envelope mEnvelope;
+    LowPassFilter mFilter;
+    float mMinCutoff;
+    float mResonance;
+    float mEnvLevel;
+    double mLfoSample;
+    float mLfoAmount;
 };
 
 

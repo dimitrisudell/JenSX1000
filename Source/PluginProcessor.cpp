@@ -131,11 +131,12 @@ int JenSx1000AudioProcessor::getNumPrograms()
 
 int JenSx1000AudioProcessor::getCurrentProgram()
 {
-    return 0;
+    return currentProgram;
 }
 
 void JenSx1000AudioProcessor::setCurrentProgram (int index)
 {
+    currentProgram = index;
     Program* p = programs.getProgramPointer((FactoryPrograms::Programs)index);
     setProgram(p);
 }
@@ -203,6 +204,7 @@ void JenSx1000AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     ampEnvelope.setSampleRate(currentSampleRate);
     vcf.setSampleRate(currentSampleRate);
     freqControl.setSampleRate(currentSampleRate);
+    noClick.setSampleRate(currentSampleRate);
 }
 
 void JenSx1000AudioProcessor::releaseResources()
@@ -220,16 +222,15 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     {
         if (m.isNoteOn())
         {
-            lastMidiNote = m.getNoteNumber();
+            int lastMidiNote = m.getNoteNumber();
             DBG("MIDI note triggered : " << lastMidiNote << "\n");
-            freqControl.setNote(lastMidiNote);
-            ampEnvelope.begin();
-            vcf.begin();
+            heldNotes.insert(lastMidiNote);
         }
-        else if (m.isNoteOff() & (m.getNoteNumber() == lastMidiNote))
+        else if (m.isNoteOff())
         {
-            ampEnvelope.release();
-            vcf.release();
+            int releasedNote = m.getNoteNumber();
+            DBG("MIDI note released : " << releasedNote << "\n");
+            heldNotes.erase(releasedNote);
         }
         else if (m.isAftertouch())
         {
@@ -239,6 +240,25 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
     }
     
+    int highestHeldNote;
+    
+    if (heldNotes.empty()){
+        if (currentNote > 0){
+            DBG("Note released");
+            ampEnvelope.release();
+            vcf.release();
+            currentNote = -1000;
+            nextNote = -2000;
+        }
+    } else {
+        highestHeldNote = *heldNotes.rbegin();
+        if (nextNote != highestHeldNote){
+            nextNote = highestHeldNote;
+            noClick.start();
+        }
+    }
+    
+    
     std::vector<float*> ChannelData;
     
     for (int i = 0; i < getNumOutputChannels(); i++){
@@ -247,10 +267,18 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     
     for (int sample = 0; sample < buffer.getNumSamples(); ++sample){
         
-        double nextLFOSample = lfo.getNextSample();
+        if (!heldNotes.empty() && currentNote != nextNote && noClick.fadingIn()){
+            currentNote = nextNote;
+            freqControl.setNote(currentNote);
+            ampEnvelope.begin();
+            vcf.begin();
+        }
+        
+        float nextLFOSample = lfo.getNextSample();
         freqControl.setNextVibratoOscSample(nextLFOSample);
         vcf.setNextLFOSample(nextLFOSample);
         oscillator.setNextPWMSample(nextLFOSample);
+        float nextNoClickSample = noClick.getNextSample();
         
         oscillator.updateFrequency(freqControl.getNextFrequency());
         
@@ -258,7 +286,8 @@ void JenSx1000AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         float nextNoiseSample = noise.getNextSample();
         float nextAmpSample = ampEnvelope.getNextSample();
         
-        float nextSample = (vcf.processNextSample((nextOscSample * vcoLevel) + (nextNoiseSample * noiseLevel)) * nextAmpSample) * ampLevel;
+        
+        float nextSample = (vcf.processNextSample((nextOscSample * vcoLevel) + (nextNoiseSample * noiseLevel)) * nextAmpSample) * ampLevel *nextNoClickSample;
         
         for (float* channel : ChannelData){
             channel[sample] = nextSample;
@@ -279,7 +308,7 @@ AudioProcessorEditor* JenSx1000AudioProcessor::createEditor()
 }
 
 void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, float newValue){
-    if (param == vcoTuneParam) {freqControl.setTuning((newValue * 24) - 12);}
+    if (param == vcoTuneParam) {freqControl.setTuning((newValue * 2) - 1);}
     else if (param == vcoOctaveParam) {
         if (newValue == 1){freqControl.setOctave(FreqControl::FOUR);}
         else if (newValue > 0.66){freqControl.setOctave(FreqControl::EIGHT);}
@@ -287,29 +316,29 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
         else if (newValue == 0){freqControl.setOctave(FreqControl::THIRTY_TWO);}
         else {DBG("OCTAVE SETTING NOT KNOWN"); jassertfalse;}
     }
-    else if (param == vcoVibratoParam) {freqControl.setVibratoValue(newValue);}
+    else if (param == vcoVibratoParam) {freqControl.setVibratoValue(newValue * JenConstants::VibratoMax);}
     else if (param == vcoWaveformParam) {
         if (newValue == 0){oscillator.updateWave(Oscillator::SAW);}
         else if (newValue == 0.5){oscillator.updateWave(Oscillator::SQUARE);}
         else if (newValue == 1){oscillator.updateWave(Oscillator::PULSE);}
         else {DBG("WAVEFORM SETTING NOT KNOWN: " + (String)newValue + "\n"); jassertfalse;}
     }
-    else if (param == vcoPulseWidthParam) {oscillator.setPulseWidth(((1 - newValue) * 45) + 5);}
-    else if (param == vcoPWMParam) {oscillator.setPWMamount(newValue);}
+    else if (param == vcoPulseWidthParam) {oscillator.setPulseWidth((JenConstants::PulseWidthMin + ((1 - newValue) * JenConstants::pulseWidthRange)));}
+    else if (param == vcoPWMParam) {oscillator.setPWMamount(((pow(30, newValue) - 1)) / 29);}
     else if (param == vcoLevelParam) { vcoLevel = (newValue * 0.5); }
-    else if (param == vcoGlideParam) { freqControl.setGlideValue(newValue);}
+    else if (param == vcoGlideParam) { freqControl.setGlideValue(((pow(30, newValue) - 1)) / 29);}
     else if (param == lfoSpeedParam) {
-        float lfoFrequency = newValue * 24.75 + 0.25;
+        float lfoFrequency = FreqControl::getMidiNoteInHertz((JenConstants::LfoMinSpeed + (newValue * JenConstants::LfoSpeedRange)));
         DBG("New LFO speed: " + (String)lfoFrequency); lfo.updateFrequency(lfoFrequency);
     }
-    else if (param == vcfFrequencyParam) {vcf.setCutoff(newValue);}
+    else if (param == vcfFrequencyParam) {vcf.setCutoff(((pow(30, newValue) - 1)) / 29);}
     else if (param == vcfResonanceParam) {vcf.setResonance(newValue);}
     else if (param == vcfLFOParam) {vcf.setLFOAmount(newValue);}
     else if (param == vcfEnvLevelParam) {vcf.setEnvLevel(newValue);}
-    else if (param == vcfAttackParam) {vcf.setAttackValue(newValue);}
-    else if (param == vcfDecayParam) {vcf.setDecayValue(newValue);}
+    else if (param == vcfAttackParam) {vcf.setAttackValue(((pow(30, newValue) - 1)) / 29);}
+    else if (param == vcfDecayParam) {vcf.setDecayValue(((pow(30, newValue) - 1)) / 29);}
     else if (param == vcfSustainParam) {vcf.setSustainAmplitude(newValue);}
-    else if (param == vcfReleaseParam) {vcf.setReleaseValue(newValue);}
+    else if (param == vcfReleaseParam) {vcf.setReleaseValue(((pow(30, newValue) - 1)) / 29);}
     else if (param == noiseNoiseParam) {
         if (newValue == 0) {noise.setState(NoiseGen::OFF);}
         else if (newValue == 0.5) {noise.setState(NoiseGen::WHITE);}
@@ -318,10 +347,10 @@ void JenSx1000AudioProcessor::parameterChange(AudioProcessorParameter* param, fl
     }
     else if (param == noiseLevelParam) {noiseLevel = newValue * 0.5;}
     else if (param == vcaOutputVolumeParam){ ampLevel = newValue; }
-    else if (param == vcaAttackParam) {ampEnvelope.setAttackValue(newValue);}
-    else if (param == vcaDecayParam) {ampEnvelope.setDecayValue(newValue);}
+    else if (param == vcaAttackParam) {ampEnvelope.setAttackValue(((pow(30, newValue) - 1)) / 29);}
+    else if (param == vcaDecayParam) {ampEnvelope.setDecayValue(((pow(30, newValue) - 1)) / 29);}
     else if (param == vcaSustainParam) {ampEnvelope.setSustainAmplitude(newValue);}
-    else if (param == vcaReleaseParam) {ampEnvelope.setReleaseValue(newValue);}
+    else if (param == vcaReleaseParam) {ampEnvelope.setReleaseValue(((pow(30, newValue) - 1)) / 29);}
 }
 
 //==============================================================================

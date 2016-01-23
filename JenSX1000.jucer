@@ -21,9 +21,12 @@
       <FILE id="zvB0Xr" name="FactoryPrograms.h" compile="0" resource="0"
             file="Source/FactoryPrograms.h"/>
       <GROUP id="{69062EDC-FD71-5F9F-096F-9E33FDD23FDB}" name="Logic">
+        <FILE id="w2ywxp" name="NoClick.cpp" compile="1" resource="0" file="Source/NoClick.cpp"/>
+        <FILE id="Vdc3EE" name="NoClick.h" compile="0" resource="0" file="Source/NoClick.h"/>
         <FILE id="ymWiDY" name="EqControl.cpp" compile="1" resource="0" file="Source/EqControl.cpp"/>
         <FILE id="BZJFa7" name="EqControl.h" compile="0" resource="0" file="Source/EqControl.h"/>
         <FILE id="qvaTgK" name="JenParameter.h" compile="0" resource="0" file="Source/JenParameter.h"/>
+        <FILE id="iydP5M" name="NoiseGen.cpp" compile="1" resource="0" file="Source/NoiseGen.cpp"/>
         <FILE id="GbUxwD" name="NoiseGen.h" compile="0" resource="0" file="Source/NoiseGen.h"/>
         <FILE id="tRUYAa" name="FreqControl.h" compile="0" resource="0" file="Source/FreqControl.h"/>
         <FILE id="yGT1ck" name="FreqControl.cpp" compile="1" resource="0" file="Source/FreqControl.cpp"/>
@@ -31,8 +34,9 @@
         <FILE id="MJujyT" name="Glide.cpp" compile="1" resource="0" file="Source/Glide.cpp"/>
         <FILE id="cpFkry" name="Vibrato.h" compile="0" resource="0" file="Source/Vibrato.h"/>
         <FILE id="mnvn5y" name="Vibrato.cpp" compile="1" resource="0" file="Source/Vibrato.cpp"/>
-        <FILE id="DIfMcl" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
-        <FILE id="vzmrgS" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+        <FILE id="DIfMcl" name="LowPassFilter.h" compile="0" resource="0" file="Source/LowPassFilter.h"/>
+        <FILE id="vzmrgS" name="LowPassFilter.cpp" compile="1" resource="0"
+              file="Source/LowPassFilter.cpp"/>
         <FILE id="bcCtn5" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
         <FILE id="eb5ZzL" name="Envelope.cpp" compile="1" resource="0" file="Source/Envelope.cpp"/>
         <FILE id="tTdRM3" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
@@ -43,6 +47,7 @@
               file="Source/PolyBlepOscillator.cpp"/>
       </GROUP>
       <GROUP id="{172E8F0E-5E94-6365-0F33-AFF4AA48C40B}" name="UI">
+        <FILE id="bxBgAL" name="JenKnob.cpp" compile="1" resource="0" file="Source/JenKnob.cpp"/>
         <FILE id="Rettp1" name="JenColours.h" compile="0" resource="0" file="Source/JenColours.h"/>
         <FILE id="z81LzL" name="BackgroundImage.cpp" compile="1" resource="0"
               file="Source/BackgroundImage.cpp"/>

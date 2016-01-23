@@ -11,10 +11,10 @@
 #ifndef FILTERTESTS_H_INCLUDED
 #define FILTERTESTS_H_INCLUDED
 
-#include "Filter.h"
+#include "LowPassFilter.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class FilterTests  : public UnitTest, public Filter {
+class FilterTests  : public UnitTest, public LowPassFilter {
     
 public:
     FilterTests()  : UnitTest ("Filter Tests"){}

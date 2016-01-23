@@ -10,15 +10,18 @@
 
 #include "Vibrato.h"
 
-float Vibrato::getNextVibratoIncrement(){
-    float vibratoIncrement = nextVibOscSample * vibratoAmount;
+float Vibrato::getNextVibratoIncrement()
+{
+    float vibratoIncrement = mNextVibOscSample * mVibratoAmount;
     return vibratoIncrement;
 }
 
-void Vibrato::setNextVibratoOscSample(float oscSample){
-    nextVibOscSample = oscSample;
+void Vibrato::setNextVibratoOscSample (float oscSample)
+{
+    mNextVibOscSample = oscSample;
 }
 
-void Vibrato::setVibratoAmount(float semitones){
-    vibratoAmount = semitones;
+void Vibrato::setVibratoAmount (float semitones)
+{
+    mVibratoAmount = semitones;
 }

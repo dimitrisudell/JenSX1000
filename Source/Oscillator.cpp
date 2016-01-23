@@ -11,42 +11,48 @@
 #include "Oscillator.h"
 #include "JuceHeader.h"
 
-Oscillator::Oscillator(): currentPhase(0), currentWave(SINE) {
+Oscillator::Oscillator() : mCurrentPhase(0), mCurrentWave(SINE)
+{
     updatePhaseIncrement();
 };
 
-void Oscillator::updateWave(Wave w) {
-    currentWave = w;
+void Oscillator::updateWave(Wave w)
+{
+    mCurrentWave = w;
 }
 
-void Oscillator::updateFrequency(double freq){
-    currentFrequency = freq;
-    jassert(currentFrequency > 0);
+void Oscillator::updateFrequency (double freq)
+{
+    mCurrentFrequency = freq;
+    jassert(mCurrentFrequency > 0);
     updatePhaseIncrement();
 }
 
-float Oscillator::getNextSample(){
-    jassert(currentSampleRate > 0);
-    jassert(currentFrequency > 0);
-    float value = naiveWaveformForMode(currentWave);
-    currentPhase += phaseIncrement;
-    while (currentPhase >= twoPI) {
-        currentPhase -= twoPI;
+float Oscillator::getNextSample()
+{
+    jassert(mCurrentSampleRate > 0);
+    jassert(mCurrentFrequency > 0);
+    float value = naiveWaveformForMode(mCurrentWave);
+    mCurrentPhase += mPhaseIncrement;
+    while (mCurrentPhase >= twoPI) {
+        mCurrentPhase -= twoPI;
     }
     return value;
 }
 
-float Oscillator::naiveWaveformForMode(Wave wave) {
+float Oscillator::naiveWaveformForMode(Wave wave)
+{
     float value;
+    
     switch (wave) {
         case SINE:
-            value = sin(currentPhase);
+            value = sin(mCurrentPhase);
             break;
         case SAW:
-            value = (2.0 * currentPhase / twoPI) - 1.0;
+            value = (2.0 * mCurrentPhase / twoPI) - 1.0;
             break;
         case SQUARE:
-            if (currentPhase < PI) {
+            if (mCurrentPhase < PI) {
                 value = 1.0;
             } else {
                 value = -1.0;
@@ -54,47 +60,54 @@ float Oscillator::naiveWaveformForMode(Wave wave) {
             break;
         case PULSE:
             calculteCurrentPulseWidth();
-            if (currentPhase < pulseWidth) {
+            if (mCurrentPhase < mPulseWidth) {
                 value = 1.0;
             } else {
                 value = -1.0;
             }
             break;
         case TRIANGLE:
-            value = -1.0 + (2.0 * currentPhase / twoPI);
+            value = -1.0 + (2.0 * mCurrentPhase / twoPI);
             value = 2.0 * (fabs(value) - 0.5);
             break;
         default:
             break;
     }
+    
     return value;
 }
 
-void Oscillator::updateSampleRate(double sampleRate){
-    currentSampleRate = sampleRate;
+void Oscillator::updateSampleRate (double sampleRate)
+{
+    mCurrentSampleRate = sampleRate;
     updatePhaseIncrement();
 }
 
-void Oscillator::setPulseWidth(float percent){
-    masterPulseWidthPercent = percent;
+void Oscillator::setPulseWidth (float percent)
+{
+    mMasterPulseWidthPercent = percent;
     calculteCurrentPulseWidth();
 }
 
-void Oscillator::calculteCurrentPulseWidth(){
-    pulseWidthFaction = (masterPulseWidthPercent/100) + (PWMLFOSample * PWMamount);
-    if (pulseWidthFaction < 0) { pulseWidthFaction = 0;}
-    pulseWidth = twoPI * pulseWidthFaction;
+void Oscillator::calculteCurrentPulseWidth()
+{
+    mPulseWidthFaction = (mMasterPulseWidthPercent/100) + (mPwmLfoSample * mPwmAmount);
+    if (mPulseWidthFaction < 0) { mPulseWidthFaction = 0;}
+    mPulseWidth = twoPI * mPulseWidthFaction;
 }
 
-void Oscillator::setNextPWMSample(double sample){
-    PWMLFOSample = sample/4;
+void Oscillator::setNextPWMSample (double sample)
+{
+    mPwmLfoSample = sample/4;
 }
 
-void Oscillator::setPWMamount(float amount){
-    PWMamount = amount;
+void Oscillator::setPWMamount (float amount)
+{
+    mPwmAmount = amount;
 }
 
-void Oscillator::updatePhaseIncrement(){
-    const double cyclesPerSample = currentFrequency / currentSampleRate;
-    phaseIncrement = cyclesPerSample * twoPI;
+void Oscillator::updatePhaseIncrement()
+{
+    const double cyclesPerSample = mCurrentFrequency / mCurrentSampleRate;
+    mPhaseIncrement = cyclesPerSample * twoPI;
 }

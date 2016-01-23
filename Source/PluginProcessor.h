@@ -11,15 +11,17 @@
 #ifndef PLUGINPROCESSOR_H_INCLUDED
 #define PLUGINPROCESSOR_H_INCLUDED
 
+#include <set>
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PolyBlepOscillator.h"
 #include "Oscillator.h"
 #include "Envelope.h"
-#include "Filter.h"
 #include "FreqControl.h"
 #include "NoiseGen.h"
 #include "EqControl.h"
 #include "FactoryPrograms.h"
+#include "NoClick.h"
 
 #include "TestsHeader.h"
 
@@ -120,9 +122,14 @@ public:
 private:
     //==============================================================================
     
-    int lastMidiNote;
-    
     FactoryPrograms programs;
+    int currentProgram;
+    
+    std::set<int> heldNotes;
+    
+    int currentNote, nextNote;
+    
+    NoClick noClick;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JenSx1000AudioProcessor)
 };

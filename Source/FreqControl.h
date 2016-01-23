@@ -47,18 +47,19 @@ public:
     
     void setVibratoValue(float);
     
+    static double getMidiNoteInHertz (float, const double frequencyOfA = 440);
+    
 private:
     
-    float tuning;
-    Octave currentOctave;
+    float mTuning;
+    Octave mCurrentOctave;
     
-    float targetNote;
-    float currentNote;
+    int mOriginalMidiNote = 0;
+    float mTargetNote;
+    float mCurrentNote;
     
-    Glide glide;
-    Vibrato vibrato;
-
-    double getMidiNoteInHertz (float, const double frequencyOfA = 440);
+    Glide mGlide;
+    Vibrato mVibrato;
 };
 
 #endif  // FREQCONTROL_H_INCLUDED

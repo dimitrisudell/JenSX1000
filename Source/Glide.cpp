@@ -11,19 +11,21 @@
 #include "Glide.h"
 #include "JuceHeader.h"
 
-Glide::Glide(double maxGlideTime, double sampleRate): mFirstGlide(true), mMaxGlideTime(maxGlideTime), mGlideValue(0.5), mTotalGlideDistance(0.0), mGlideDistanceLeft(0.0)
+Glide::Glide (double maxGlideTime, double sampleRate) : mFirstGlide(true), mMaxGlideTime(maxGlideTime), mGlideValue(0.5), mTotalGlideDistance(0.0), mGlideDistanceLeft(0.0)
 {
     setSampleRate(sampleRate);
 }
 
-void Glide::setGlide(double currentNote, double targetNote) {
+void Glide::setGlide (double currentNote, double targetNote)
+{
     if (mFirstGlide == false) {mTotalGlideDistance = targetNote - currentNote;};
     mGlideDistanceLeft = mTotalGlideDistance;
     updateGlideIncrement();
     mFirstGlide = false;
 }
 
-void Glide::setGlideValue(double value) {
+void Glide::setGlideValue (double value)
+{
     jassert(value >= 0);
     jassert(value <= 1);
     //will cause errors if it is 0
@@ -31,24 +33,25 @@ void Glide::setGlideValue(double value) {
     updateGlideIncrement();
 }
 
-void Glide::setSampleRate(double sampleRate){
+void Glide::setSampleRate (double sampleRate)
+{
     jassert(sampleRate > 0);
     mSampleRate = sampleRate;
     updateGlideIncrement();
 }
 
-float Glide::getNextGlideIncrement() {
+float Glide::getNextGlideIncrement()
+{
     if (mTotalGlideDistance < 0){
         if (mGlideDistanceLeft < 0) {mGlideDistanceLeft -= mGlideIncrement;};
         return mGlideDistanceLeft;
-    }
-    else {
+    } else {
         if (mGlideDistanceLeft > 0) {mGlideDistanceLeft -= mGlideIncrement;};
         return mGlideDistanceLeft;
     };
-    
 }
 
-void Glide::updateGlideIncrement() {
+void Glide::updateGlideIncrement()
+{
     mGlideIncrement = mTotalGlideDistance / (mGlideValue * mMaxGlideTime * mSampleRate);
 };

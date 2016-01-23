@@ -16,20 +16,16 @@ class Glide{
     
 public:
     
-    Glide(double maxGlideTime, double sampleRate = 44000.00);
+    Glide (double maxGlideTime, double sampleRate = 44000.00);
     
-    void setGlide(double currentNote, double targetNote);
+    void setGlide (double currentNote, double targetNote);
     
     void setGlideValue(double);
     
-    void setSampleRate(double sampleRate);
+    void setSampleRate (double sampleRate);
     
     float getNextGlideIncrement();
-    
-protected:
-    
-    
-    
+
 private:
     
     bool mFirstGlide;

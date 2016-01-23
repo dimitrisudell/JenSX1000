@@ -25,8 +25,8 @@ public:
     
 private:
     
-    float vibratoAmount;
-    float nextVibOscSample;
+    float mVibratoAmount;
+    float mNextVibOscSample;
     
 };
 

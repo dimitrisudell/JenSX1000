@@ -25,11 +25,11 @@ public:
     
     void updateWave(Wave);
     
-    void updateFrequency(double freq);
+    void updateFrequency (double freq);
     
     virtual float getNextSample();
     
-    void updateSampleRate(double sampleRate);
+    void updateSampleRate (double sampleRate);
     
     void setPulseWidth(float);
     
@@ -43,19 +43,19 @@ protected:
     
     virtual float naiveWaveformForMode(Wave);
     
-    double currentFrequency, currentSampleRate, currentPhase, phaseIncrement;
-    Wave currentWave;
+    double mCurrentFrequency, mCurrentSampleRate, mCurrentPhase, mPhaseIncrement;
+    Wave mCurrentWave;
     
     virtual void updatePhaseIncrement();
     
     const double PI = 2*acos(0.0);
     const double twoPI = 2 * PI;
     
-    float masterPulseWidthPercent;
-    double pulseWidthFaction;
-    double pulseWidth;
-    double PWMLFOSample;
-    float PWMamount;
+    float mMasterPulseWidthPercent;
+    double mPulseWidthFaction;
+    double mPulseWidth;
+    double mPwmLfoSample;
+    float mPwmAmount;
     
     
 };
